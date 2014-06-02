@@ -53,7 +53,7 @@ public class LightBlock extends BlockContainer {
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
 		super.onBlockPlacedBy(world, x, y, z, player, stack);
 		int dir = MathHelper.floor_double((double) ((player.rotationYaw * 4F) / 360F) + 0.5D) & 3;
-		world.setBlockMetadataWithNotify(x, y, z, dir, 0);
+		world.setBlockMetadataWithNotify(x, y, z, dir, 3);
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -89,9 +89,11 @@ public class LightBlock extends BlockContainer {
 		return 0;
 	}
 	
+	
 	@Override
 	public int getLightValue(IBlockAccess world, int x, int y, int z)
 	{
+		super.getLightValue(world, x, y, z);
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 		int brightness = 0;
 		if (tileEntity instanceof OpenLightTE) {
@@ -103,4 +105,5 @@ public class LightBlock extends BlockContainer {
 		}
 		return brightness;
 	}	
+	
 }

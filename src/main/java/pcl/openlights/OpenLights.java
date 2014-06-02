@@ -37,7 +37,6 @@ public class OpenLights {
     @SidedProxy(clientSide="pcl.openlights.ClientProxy", serverSide="pcl.openlights.CommonProxy")
     public static CommonProxy proxy;
     public static Config cfg = null;
-    public static boolean render3D = true;
     
     private static boolean debug = true;
     public static Logger logger;
@@ -77,7 +76,8 @@ public class OpenLights {
 		for (int ix = 0; ix < 16; ix++) {
 			ItemStack multiBlockStack = new ItemStack(openLightBlock, 1, ix);
 			LanguageRegistry.addName(multiBlockStack, multiBlockNames[multiBlockStack.getItemDamage()]);
-		}        
+		}
+		
     	GameRegistry.registerTileEntity(OpenLightTE.class, "OpenLightTE");
     	openLightBlock.setCreativeTab(li.cil.oc.api.CreativeTab.instance);
     	openLightBlock.setUnlocalizedName("openlight");
