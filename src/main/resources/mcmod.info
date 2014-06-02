@@ -1,0 +1,16 @@
+[
+{
+  "modid": "openlights",
+  "name": "OpenLights",
+  "description": "OpenComputers addon, allows for color changing lights.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authors": ["Michiyo"],
+  "credits": "OpenComputers/Sangar for the awesome computer mod.",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
