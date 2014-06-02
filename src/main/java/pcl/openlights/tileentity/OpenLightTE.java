@@ -58,14 +58,14 @@ public class OpenLightTE extends TileEntity implements SimpleComponent {
 	
 	@Callback
 	public Object[] setBrightness(Context context, Arguments args) {
+		//context.pause(1);
 		brightness = args.checkInteger(0);
 		if (brightness > 15) {
 			return new Object[] { "Error, brightness should be between 0, and 15" };
 		}
-		worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		//worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+		//worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		worldObj.updateAllLightTypes(xCoord, yCoord, zCoord);
-		worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, brightness, 0);
 		getDescriptionPacket();
 		return new Object[] { "Ok" };
 	}
