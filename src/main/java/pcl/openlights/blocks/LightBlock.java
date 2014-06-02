@@ -90,13 +90,6 @@ public class LightBlock extends BlockContainer {
 		return 0;
 	}
 	
-	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(int par1, CreativeTabs tab, List subItems) {
-		for (int ix = 0; ix < 16; ix++) {
-			subItems.add(new ItemStack(this, 1, ix));
-		}
-	}
-	
 	@Override
 	public int getLightValue(IBlockAccess world, int x, int y, int z)
 	{

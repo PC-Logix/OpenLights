@@ -8,7 +8,7 @@ public class MultiItemBlock extends ItemBlock {
 	public MultiItemBlock(int id) {
 		super(id);
 		setHasSubtypes(true);
-		setUnlocalizedName("multiBlock");
+		setUnlocalizedName("openLight");
 	}
 	
 	@Override
