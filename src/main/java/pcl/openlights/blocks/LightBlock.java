@@ -76,11 +76,10 @@ public class LightBlock extends BlockContainer {
 	@Override
 	public int colorMultiplier(IBlockAccess world, int x, int y, int z) {
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
-		int color = 0xFFFFFFFF;
+		int color = 0xFFFFFF;
 		if (tileEntity instanceof OpenLightTE) {
 			OpenLightTE myTE = (OpenLightTE) tileEntity;
 			color = myTE.getColor();
-			//setLightValue(myTE.getBrightness());
 		}
 		return color;
 	}
@@ -93,13 +92,15 @@ public class LightBlock extends BlockContainer {
 	@Override
 	public int getLightValue(IBlockAccess world, int x, int y, int z)
 	{
-	 return world.getBlockMetadata(x,y,z);
-	}
-
-	@Override
-	public float getBlockBrightness(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
-	{
-	return 0;
-	}
-	
+		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+		int brightness = 0;
+		if (tileEntity instanceof OpenLightTE) {
+			OpenLightTE myTE = (OpenLightTE) tileEntity;
+			brightness = myTE.getBrightness();
+			if (brightness > 15) {
+				brightness = 15;
+			}
+		}
+		return brightness;
+	}	
 }

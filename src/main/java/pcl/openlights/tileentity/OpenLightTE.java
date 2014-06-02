@@ -16,8 +16,8 @@ import net.minecraft.tileentity.TileEntity;
  */
 public class OpenLightTE extends TileEntity implements SimpleComponent {
 
-	public int color;
-	public int brightness;
+	public int color = 0xFFFFFF;
+	public int brightness = 0;
 	
 	public OpenLightTE() { }
 	
@@ -64,6 +64,7 @@ public class OpenLightTE extends TileEntity implements SimpleComponent {
 		}
 		worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		worldObj.updateAllLightTypes(xCoord, yCoord, zCoord);
 		worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, brightness, 0);
 		getDescriptionPacket();
 		return new Object[] { "Ok" };
@@ -91,13 +92,15 @@ public class OpenLightTE extends TileEntity implements SimpleComponent {
     public void onDataPacket(INetworkManager net, Packet132TileEntityData pkt) {
         NBTTagCompound tag = pkt.data;
         readFromNBT(tag);
+        this.worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
         this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        this.worldObj.updateAllLightTypes(xCoord, yCoord, zCoord);
     }
 
     @Override
     public Packet getDescriptionPacket() {
         NBTTagCompound tag = new NBTTagCompound();
         writeToNBT(tag);
-        return new Packet132TileEntityData(xCoord, yCoord, zCoord, blockMetadata, tag);
+        return new Packet132TileEntityData(xCoord, yCoord, zCoord, 1, tag);
     }
 }
