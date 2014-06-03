@@ -1,12 +1,13 @@
 package pcl.openlights;
 
+import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 
 public class MultiItemBlock extends ItemBlock {
 
-	public MultiItemBlock(int id) {
-		super(id);
+	public MultiItemBlock(Block par1) {
+		super(par1);
 		setHasSubtypes(true);
 		setUnlocalizedName("openLight");
 	}

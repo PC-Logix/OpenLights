@@ -1,8 +1,8 @@
 package li.cil.oc.api.event;
 
+import cpw.mods.fml.common.eventhandler.Cancelable;
 import li.cil.oc.api.machine.Robot;
-import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.event.Cancelable;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public abstract class RobotMoveEvent extends RobotEvent {
     /**

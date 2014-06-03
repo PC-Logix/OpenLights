@@ -5,10 +5,11 @@ import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;
 import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.INetworkManager;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet132TileEntityData;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.EnumSkyBlock;
 
 /**
  * @author Caitlyn
@@ -50,7 +51,7 @@ public class OpenLightTE extends TileEntity implements SimpleComponent {
 	@Callback
 	public Object[] setColor(Context context, Arguments args) {
 		color = args.checkInteger(0);
-		worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+		//worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		getDescriptionPacket();
 		return new Object[] { "Ok" };
@@ -63,9 +64,8 @@ public class OpenLightTE extends TileEntity implements SimpleComponent {
 		if (brightness > 15) {
 			return new Object[] { "Error, brightness should be between 0, and 15" };
 		}
-		//worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
-		//worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-		worldObj.updateAllLightTypes(xCoord, yCoord, zCoord);
+		worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, brightness, 3);
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		getDescriptionPacket();
 		return new Object[] { "Ok" };
 	}
@@ -89,18 +89,19 @@ public class OpenLightTE extends TileEntity implements SimpleComponent {
 	}
 	
 	@Override
-    public void onDataPacket(INetworkManager net, Packet132TileEntityData pkt) {
-        NBTTagCompound tag = pkt.data;
-        readFromNBT(tag);
-        this.worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+	NBTTagCompound tagCom = pkt.func_148857_g();
+	this.readFromNBT(tagCom);
         this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-        this.worldObj.updateAllLightTypes(xCoord, yCoord, zCoord);
+        this.worldObj.setLightValue(EnumSkyBlock.Block, xCoord, yCoord, zCoord, getBrightness());
+        this.worldObj.updateLightByType(EnumSkyBlock.Block, xCoord, yCoord, zCoord);
     }
 
     @Override
     public Packet getDescriptionPacket() {
-        NBTTagCompound tag = new NBTTagCompound();
-        writeToNBT(tag);
-        return new Packet132TileEntityData(xCoord, yCoord, zCoord, 1, tag);
+    NBTTagCompound tagCom = new NBTTagCompound();
+    this.writeToNBT(tagCom);
+    return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, this.blockMetadata, tagCom);
     }
+
 }
