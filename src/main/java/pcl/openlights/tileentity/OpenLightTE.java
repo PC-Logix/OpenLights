@@ -80,7 +80,7 @@ public class OpenLightTE extends TileEntity implements SimpleComponent {
 		return new Object[] { getBrightness() };
 	}
 	
-	public int getColor() {
+	public string getColor() {
 		return String.format("%06X", (0xFFFFFF & this.color));
 	}
 	
