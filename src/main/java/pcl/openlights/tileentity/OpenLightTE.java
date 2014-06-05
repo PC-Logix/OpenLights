@@ -39,7 +39,7 @@ public class OpenLightTE extends TileEntity implements SimpleComponent {
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		nbt.setInteger("color", getColor());
+		nbt.setInteger("color", Integer.parseInt(getColor(), 16));
 		nbt.setInteger("brightness", getBrightness());
 	}
 
@@ -80,12 +80,12 @@ public class OpenLightTE extends TileEntity implements SimpleComponent {
 		return new Object[] { getBrightness() };
 	}
 	
-	public int getColor() {
-		return this.color;
+	public String getColor() {
+		return String.format("%06X", (0xFFFFFF & this.color));
 	}
 	
 	public int getBrightness() {
-		return this.brightness;
+		return worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 	}
 	
 	@Override

@@ -65,7 +65,7 @@ public class LightBlock extends BlockContainer {
 		int color = 0xFFFFFF;
 		if (tileEntity instanceof OpenLightTE) {
 			OpenLightTE myTE = (OpenLightTE) tileEntity;
-			color = myTE.getColor();
+			color = Integer.parseInt(myTE.getColor(), 16);
 		}
 		return color;
 	}
