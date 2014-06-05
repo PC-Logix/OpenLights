@@ -14,6 +14,7 @@ public final class CreativeTab {
      * present (don't ship the API in your mod), so don't rely on this!
      */
     public static CreativeTabs instance = CreativeTabs.tabRedstone;
+	public static CreativeTabs Instance = CreativeTabs.tabRedstone;
 
     private CreativeTab() {
     }
