@@ -2,6 +2,7 @@ package pcl.openlights;
 
 import java.net.URL;
 import java.util.logging.Logger;
+import java.lang.reflect.Field;
 
 import pcl.openlights.blocks.LightBlock;
 import pcl.openlights.tileentity.OpenLightTE;
@@ -79,7 +80,16 @@ public class OpenLights {
 		}
 		
     	GameRegistry.registerTileEntity(OpenLightTE.class, "OpenLightTE");
-    	openLightBlock.setCreativeTab(li.cil.oc.api.CreativeTab.instance);
+    	
+    		Class<?> clz = li.cil.oc.api.CreativeTab.class;
+		try {
+		    Field f = clz.getField("instance");
+		        openLightBlock.setCreativeTab(li.cil.oc.api.CreativeTab.instance);
+		}
+		catch ( NoSuchFieldException ex) {
+			openLightBlock.setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
+		}
+    	
     	openLightBlock.setUnlocalizedName("openlight");
         
     }
