@@ -49,7 +49,6 @@ public class LightBlock extends BlockContainer {
 			setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
 		}
 		
-		setCreativeTab(li.cil.oc.api.CreativeTab.instance);
 		setBlockName("openlight");
 		setHardness(.5f);
 		setBlockTextureName(OpenLights.MODID + ":openlight");

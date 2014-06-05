@@ -69,7 +69,7 @@ public class OpenLights {
     	}
         
     	GameRegistry.registerTileEntity(OpenLightTE.class, "OpenLightTE");
-    	openLightBlock.setCreativeTab(li.cil.oc.api.CreativeTab.instance);
+    	//openLightBlock.setCreativeTab(li.cil.oc.api.CreativeTab.instance);
         
     }
 }
