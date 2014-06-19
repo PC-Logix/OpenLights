@@ -48,7 +48,7 @@ public class OpenLightTE extends TileEntity implements SimpleComponent {
 		return new Object[] { "Lasciate ogne speranza, voi ch'intrate" };
 	}
 	
-	@Callback
+	@Callback(direct=true)
 	public Object[] setColor(Context context, Arguments args) {
 		color = args.checkInteger(0);
 		//worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
@@ -57,7 +57,7 @@ public class OpenLightTE extends TileEntity implements SimpleComponent {
 		return new Object[] { "Ok" };
 	}
 	
-	@Callback
+	@Callback(direct=true)
 	public Object[] setBrightness(Context context, Arguments args) {
 		//context.pause(1);
 		brightness = args.checkInteger(0);
