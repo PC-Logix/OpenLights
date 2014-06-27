@@ -4,10 +4,14 @@ import java.net.URL;
 import java.util.logging.Logger;
 import java.lang.reflect.Field;
 
+import li.cil.oc.api.Items;
 import pcl.openlights.blocks.LightBlock;
+import pcl.openlights.items.PrismaticPaste;
 import pcl.openlights.tileentity.OpenLightTE;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockPane;
 import net.minecraft.block.material.Material;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -54,6 +58,7 @@ public class OpenLights {
     public void preInit(FMLPreInitializationEvent event) {
     	cfg = new Config(new Configuration(event.getSuggestedConfigurationFile()));
     	final Block openLightBlock = new LightBlock(cfg.printerBlockID, Material.iron);
+    	final Item prismaticPaste = new PrismaticPaste(cfg.prismaticPasteID);
         if((event.getSourceFile().getName().endsWith(".jar") || debug) && event.getSide().isClient() && cfg.enableMUD){
             try {
                 Class.forName("pcl.openprinter.mud.ModUpdateDetector").getDeclaredMethod("registerMod", ModContainer.class, URL.class, URL.class).invoke(null,
@@ -81,13 +86,41 @@ public class OpenLights {
 		
     	GameRegistry.registerTileEntity(OpenLightTE.class, "OpenLightTE");
     	
-    		Class<?> clz = li.cil.oc.api.CreativeTab.class;
+    	Class<?> clz = li.cil.oc.api.CreativeTab.class;
 		try {
 		    Field f = clz.getField("instance");
-		        openLightBlock.setCreativeTab(li.cil.oc.api.CreativeTab.instance);
+		    openLightBlock.setCreativeTab(li.cil.oc.api.CreativeTab.instance);
+	        ItemStack redDye	= new ItemStack(Item.dyePowder, 1, 1);
+	        ItemStack greenDye	= new ItemStack(Item.dyePowder, 1, 2);
+	        ItemStack blueDye	= new ItemStack(Item.dyePowder, 1, 4);
+	        ItemStack glowDust = new ItemStack(Item.glowstone);
+	        ItemStack pcb	= li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1);
+	        ItemStack glassPane = new ItemStack(Block.thinGlass);
+
+	        GameRegistry.addShapelessRecipe( new ItemStack(prismaticPaste, 4), redDye, greenDye, blueDye, glowDust);
+
+	        GameRegistry.addRecipe( new ItemStack(openLightBlock, 1),
+	                " G ",
+	                "GPG",
+	                " C ",
+	                'G', glassPane, 'P', prismaticPaste, 'C', pcb);
 		}
 		catch ( NoSuchFieldException ex) {
 			openLightBlock.setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
+	        ItemStack redDye	= new ItemStack(Item.dyePowder, 1, 1);
+	        ItemStack greenDye	= new ItemStack(Item.dyePowder, 1, 2);
+	        ItemStack blueDye	= new ItemStack(Item.dyePowder, 1, 4);
+	        ItemStack glowDust = new ItemStack(Item.glowstone);
+	        ItemStack pcb	= Items.PrintedCircuitBoard;
+	        ItemStack glassPane = new ItemStack(Block.thinGlass);
+
+	        GameRegistry.addShapelessRecipe( new ItemStack(prismaticPaste, 4), redDye, greenDye, blueDye, glowDust);
+
+	        GameRegistry.addRecipe( new ItemStack(openLightBlock, 1),
+	                " G ",
+	                "GPG",
+	                " C ",
+	                'G', glassPane, 'P', prismaticPaste, 'C', pcb);
 		}
     	
     	openLightBlock.setUnlocalizedName("openlight");

@@ -9,7 +9,9 @@ import net.minecraft.item.ItemStack;
  * OpenComputers.
  */
 public final class Items {
-    /**
+    public static final ItemStack PrintedCircuitBoard = null;
+
+	/**
      * Get a descriptor object for the block or item with the specified name.
      * <p/>
      * The names are the same as the ones used in the recipe files. An info
