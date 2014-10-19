@@ -24,10 +24,10 @@ else
 
 version = "0.1.0"
 group = "pcl.openlights"
-archivesBaseName = "OpenLights"
+archivesBaseName = "OpenLights-MC1.7.10-OC1.4"
 
 minecraft {
-	version = "1.7.2-10.12.1.1060"
+	version = "1.7.10-10.13.2.1230"
 	assetDir = "eclipse/assets"
 	replace "@VERSION@", project.version
 	replace "@BUILD@", project.ext.buildNumber

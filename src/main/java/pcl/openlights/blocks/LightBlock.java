@@ -39,15 +39,8 @@ public class LightBlock extends BlockContainer {
 
 	public LightBlock() {
 		super(Material.glass);
-		
-		Class<?> clz = li.cil.oc.api.CreativeTab.class;
-		try {
-		    Field f = clz.getField("instance");
 		    setCreativeTab(li.cil.oc.api.CreativeTab.instance);
-		}
-		catch ( NoSuchFieldException ex) {
-			setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
-		}
+
 		
 		setBlockName("openlight");
 		setHardness(.5f);
