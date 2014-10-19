@@ -46,7 +46,7 @@ public class LightBlock extends BlockContainer {
 		    setCreativeTab(li.cil.oc.api.CreativeTab.instance);
 		}
 		catch ( NoSuchFieldException ex) {
-			setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
+			setCreativeTab(li.cil.oc.api.CreativeTab.instance);
 		}
 		
 		setBlockName("openlight");

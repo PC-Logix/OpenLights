@@ -26,8 +26,19 @@ version = "0.1.0"
 group = "pcl.openlights"
 archivesBaseName = "OpenLights"
 
+repositories {
+    maven {
+        name = "OC repo"
+        url = "http://maven.cil.li/"
+    }
+}
+
+dependencies {
+    compile "li.cil.oc:OpenComputers:MC1.7.10-1.4.0.173-dev:dev"
+}
+
 minecraft {
-	version = "1.7.2-10.12.1.1060"
+	version = "1.7.10-10.13.0.1206"
 	assetDir = "eclipse/assets"
 	replace "@VERSION@", project.version
 	replace "@BUILD@", project.ext.buildNumber
