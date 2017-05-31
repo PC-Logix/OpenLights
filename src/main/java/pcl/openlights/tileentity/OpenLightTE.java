@@ -52,8 +52,8 @@ public class OpenLightTE extends TileEntity implements SimpleComponent {
 	@Callback(direct=true)
 	public Object[] setColor(Context context, Arguments args) {
 		color = args.checkInteger(0);
-		//worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
-		//worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		worldObj.markBlockForUpdate(pos);
+		this.worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
 		getDescriptionPacket();
 		return new Object[] { "Ok" };
 	}
@@ -65,8 +65,8 @@ public class OpenLightTE extends TileEntity implements SimpleComponent {
 		if (brightness > 15) {
 			return new Object[] { "Error, brightness should be between 0, and 15" };
 		}
-		//worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, brightness, 3);
-		//worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		worldObj.markBlockForUpdate(pos);
+		this.worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
 		getDescriptionPacket();
 		return new Object[] { "Ok" };
 	}
@@ -86,7 +86,6 @@ public class OpenLightTE extends TileEntity implements SimpleComponent {
 	}
 
 	public IBlockState getBrightness() {
-		//return worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 		return worldObj.getBlockState(pos);
 	}
 
@@ -107,7 +106,5 @@ public class OpenLightTE extends TileEntity implements SimpleComponent {
 		this.readFromNBT(tagCom);
 		this.worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
 		this.worldObj.markBlockForUpdate(getPos());
-		//this.worldObj.setLightValue(EnumSkyBlock.Block, xCoord, yCoord, zCoord, getBrightness());
-		//this.worldObj.updateLightByType(EnumSkyBlock.Block, pos);
 	}
 }

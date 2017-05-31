@@ -37,6 +37,7 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.ColorizerGrass;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -88,7 +89,25 @@ public class LightBlock extends Block implements ITileEntityProvider {
 	{
 		return this.getDefaultState().withProperty(BRIGHTNESS, meta);
 	}
+	
+    @SideOnly(Side.CLIENT)
+    public EnumWorldBlockLayer getBlockLayer()
+    {
+        return EnumWorldBlockLayer.CUTOUT;
+    }
 
+    @SideOnly(Side.CLIENT)
+    public int getBlockColor()
+    {
+        return ColorizerGrass.getGrassColor(0.5D, 1.0D);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public int getRenderColor(IBlockState state)
+    {
+        return this.getBlockColor();
+    }
+    
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
