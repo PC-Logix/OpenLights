@@ -53,6 +53,11 @@ public class LightBlock extends Block implements ITileEntityProvider {
 		setHardness(.5f);
 	}
 
+	@Override
+	public boolean hasTileEntity(IBlockState state) {
+		return true;
+	}
+	
     @SideOnly(Side.CLIENT)
     public void initModel() {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "inventory"));

@@ -1,0 +1,33 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"textures": {
+			"all": "openlights:blocks/openlight"
+		},
+		"model": "minecraft:cube_all"
+	},
+	"variants": {
+		"normal": [{}],
+		"inventory": [{
+			"transform": "forge:default-block"
+		}],
+		"brightness": {
+			"1": {"model": "minecraft:cube_all"},
+			"2": {"model": "minecraft:cube_all"},
+			"3": {"model": "minecraft:cube_all"},
+			"4": {"model": "minecraft:cube_all"},
+			"5": {"model": "minecraft:cube_all"},
+			"6": {"model": "minecraft:cube_all"},
+			"7": {"model": "minecraft:cube_all"},
+			"8": {"model": "minecraft:cube_all"},
+			"9": {"model": "minecraft:cube_all"},
+			"10": {"model": "minecraft:cube_all"},
+			"11": {"model": "minecraft:cube_all"},
+			"12": {"model": "minecraft:cube_all"},
+			"13": {"model": "minecraft:cube_all"},
+			"14": {"model": "minecraft:cube_all"},
+			"15": {"model": "minecraft:cube_all"},
+			"0": {"model": "minecraft:cube_all"}
+		}
+	}
+}
