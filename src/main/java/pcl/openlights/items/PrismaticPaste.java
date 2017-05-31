@@ -3,8 +3,8 @@
  */
 package pcl.openlights.items;
 
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.LanguageRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.LanguageRegistry;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.entity.Entity;
@@ -21,7 +21,7 @@ public class PrismaticPaste extends Item{
 		super();
 		maxStackSize = 64;
 		setUnlocalizedName("prismaticPaste");
-		setTextureName("openlights:prismaticpaste");
+		//setTextureName("openlights:prismaticpaste");
 		setCreativeTab(li.cil.oc.api.CreativeTab.instance);
 	}
 

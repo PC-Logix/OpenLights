@@ -4,6 +4,7 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.SimpleComponent;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -19,9 +20,9 @@ public class OpenLightTE extends TileEntity implements SimpleComponent {
 
 	public int color = 0xFFFFFF;
 	public int brightness = 0;
-	
+
 	public OpenLightTE() { }
-	
+
 	@Override
 	public String getComponentName() {
 		return "openlight";
@@ -40,23 +41,23 @@ public class OpenLightTE extends TileEntity implements SimpleComponent {
 	{
 		super.writeToNBT(nbt);
 		nbt.setInteger("color", Integer.parseInt(getColor(), 16));
-		nbt.setInteger("brightness", getBrightness());
+		nbt.setInteger("brightness", getBrightness().getBlock().getDamageValue(worldObj, pos));
 	}
 
 	@Callback
 	public Object[] greet(Context context, Arguments args) {
-		return new Object[] { "Lasciate ogne speranza, voi ch'intrate" };
+		return new Object[] { "Lasciate ogne speranza, voi ch'entrate" };
 	}
-	
+
 	@Callback(direct=true)
 	public Object[] setColor(Context context, Arguments args) {
 		color = args.checkInteger(0);
 		//worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		//worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		getDescriptionPacket();
 		return new Object[] { "Ok" };
 	}
-	
+
 	@Callback(direct=true)
 	public Object[] setBrightness(Context context, Arguments args) {
 		//context.pause(1);
@@ -64,44 +65,49 @@ public class OpenLightTE extends TileEntity implements SimpleComponent {
 		if (brightness > 15) {
 			return new Object[] { "Error, brightness should be between 0, and 15" };
 		}
-		worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, brightness, 3);
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		//worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, brightness, 3);
+		//worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		getDescriptionPacket();
 		return new Object[] { "Ok" };
 	}
-	
+
 	@Callback
 	public Object[] getColor(Context context, Arguments args) {
 		return new Object[] { getColor() };
 	}
-	
+
 	@Callback
 	public Object[] getBrightness(Context context, Arguments args) {
 		return new Object[] { getBrightness() };
 	}
-	
+
 	public String getColor() {
 		return String.format("%06X", (0xFFFFFF & this.color));
 	}
-	
-	public int getBrightness() {
-		return worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+
+	public IBlockState getBrightness() {
+		//return worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+		return worldObj.getBlockState(pos);
 	}
-	
+
+	public int getLampColor() {
+		return color;
+	}
+
+	@Override
+	public net.minecraft.network.Packet getDescriptionPacket() {
+		NBTTagCompound tag = new NBTTagCompound();
+		this.writeToNBT(tag);
+		return new S35PacketUpdateTileEntity(pos, 1, tag);
+	}
+
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-	NBTTagCompound tagCom = pkt.func_148857_g();
-	this.readFromNBT(tagCom);
-        this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-        this.worldObj.setLightValue(EnumSkyBlock.Block, xCoord, yCoord, zCoord, getBrightness());
-        this.worldObj.updateLightByType(EnumSkyBlock.Block, xCoord, yCoord, zCoord);
-    }
-
-    @Override
-    public Packet getDescriptionPacket() {
-    NBTTagCompound tagCom = new NBTTagCompound();
-    this.writeToNBT(tagCom);
-    return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, this.blockMetadata, tagCom);
-    }
-
+		NBTTagCompound tagCom = pkt.getNbtCompound();
+		this.readFromNBT(tagCom);
+		this.worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
+		this.worldObj.markBlockForUpdate(getPos());
+		//this.worldObj.setLightValue(EnumSkyBlock.Block, xCoord, yCoord, zCoord, getBrightness());
+		//this.worldObj.updateLightByType(EnumSkyBlock.Block, pos);
+	}
 }

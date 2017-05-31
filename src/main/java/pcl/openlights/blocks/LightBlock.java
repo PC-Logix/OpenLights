@@ -7,64 +7,92 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Random;
 
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.LanguageRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.LanguageRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pcl.openlights.OpenLights;
 import pcl.openlights.tileentity.OpenLightTE;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.util.IIcon;
 
 /**
  * @author Caitlyn
  *
  */
-public class LightBlock extends BlockContainer {
+public class LightBlock extends Block implements ITileEntityProvider {
 
 	public LightBlock() {
 		super(Material.glass);
-		    setCreativeTab(li.cil.oc.api.CreativeTab.instance);
-
-		
-		setBlockName("openlight");
+		setCreativeTab(li.cil.oc.api.CreativeTab.instance);
+		setUnlocalizedName("openlight");
 		setHardness(.5f);
-		setBlockTextureName(OpenLights.MODID + ":openlight");
+	}
+
+    @SideOnly(Side.CLIENT)
+    public void initModel() {
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "inventory"));
+    }
+	
+	public static final PropertyInteger BRIGHTNESS = PropertyInteger.create("brightness", 0, 15);
+
+	@Override
+	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+		super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
+	}
+
+	@Override
+	public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
+	{
+		return state;
+	}
+
+	@Override
+	protected BlockState createBlockState()
+	{
+		return new BlockState(this, new IProperty[] {BRIGHTNESS});
 	}
 	
-	private Random random;
-	private IIcon icon;
 	
 	@Override
-	public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
-		super.breakBlock(world, x, y, z, block, meta);
+	public IBlockState getStateFromMeta(int meta)
+	{
+		return this.getDefaultState().withProperty(BRIGHTNESS, meta);
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state)
+	{
+		return state.getValue(BRIGHTNESS);
 	}
 	
 	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
-		super.onBlockPlacedBy(world, x, y, z, player, stack);
-		int dir = MathHelper.floor_double((double) ((player.rotationYaw * 4F) / 360F) + 0.5D) & 3;
-		world.setBlockMetadataWithNotify(x, y, z, dir, 3);
-	}
-	
-	@Override
-	public int colorMultiplier(IBlockAccess world, int x, int y, int z) {
-		TileEntity tileEntity = world.getTileEntity(x, y, z);
+	public int colorMultiplier(IBlockAccess world, BlockPos pos, int renderPass) {
+		TileEntity tileEntity = world.getTileEntity(pos);
 		int color = 0xFFFFFF;
 		if (tileEntity instanceof OpenLightTE) {
 			OpenLightTE myTE = (OpenLightTE) tileEntity;
@@ -72,18 +100,37 @@ public class LightBlock extends BlockContainer {
 		}
 		return color;
 	}
-		
+
 	@Override
-	public int damageDropped (int metadata) {
-		return 0;
+	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
+		TileEntity tile = world.getTileEntity(pos);
+		if(tile instanceof OpenLightTE) {
+			return state.withProperty(BRIGHTNESS, ((OpenLightTE) tile).getLampColor() == 0 ? 0 : 15);
+		} else {
+			return state;
+		}
 	}
 	
+	@Override
+	public int damageDropped (IBlockState state) {
+		return 0;
+	}
+
+	@Override
+	public int getLightOpacity() {
+		return super.getLightOpacity();
+	}
+
+	@Override
+	public boolean canRenderInLayer(EnumWorldBlockLayer layer) {
+		return layer == EnumWorldBlockLayer.CUTOUT_MIPPED || super.canRenderInLayer(layer);
+	}
 	
 	@Override
-	public int getLightValue(IBlockAccess world, int x, int y, int z)
+	public int getLightValue(IBlockAccess world, BlockPos pos)
 	{
-		super.getLightValue(world, x, y, z);		
-		return world.getBlockMetadata(x, y, z);
+		super.getLightValue(world, pos);		
+		return this.lightValue = world.getBlockState(pos).getValue(BRIGHTNESS);
 	}
 
 	@Override
@@ -91,5 +138,4 @@ public class LightBlock extends BlockContainer {
 		// TODO Auto-generated method stub
 		return new OpenLightTE();
 	}	
-	
 }
