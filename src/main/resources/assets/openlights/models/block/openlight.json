@@ -1,0 +1,18 @@
+{
+    "textures": {
+        "face": "openlights:blocks/openlight",
+        "particle": "blocks/stone"   
+    }, "elements": [
+        {   "from": [ 0, 0, 0 ],
+            "to": [ 16, 16, 16 ],
+            "faces": {
+                "down":  { "texture": "#face", "cullface": "down", "tintindex": 255 },
+                "up":    { "texture": "#face", "cullface": "up", "tintindex": 255 },
+                "north": { "texture": "#face", "cullface": "north", "tintindex": 255 },
+                "south": { "texture": "#face", "cullface": "south", "tintindex": 255 },
+                "west":  { "texture": "#face", "cullface": "west", "tintindex": 255 },
+                "east":  { "texture": "#face", "cullface": "east", "tintindex": 255 }
+            }
+        }
+    ]
+}

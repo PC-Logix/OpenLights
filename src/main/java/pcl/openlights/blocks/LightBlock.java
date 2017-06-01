@@ -34,6 +34,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.util.MathHelper;
@@ -49,7 +50,6 @@ public class LightBlock extends Block implements ITileEntityProvider {
 
 	public LightBlock() {
 		super(Material.glass);
-		setCreativeTab(li.cil.oc.api.CreativeTab.instance);
 		setUnlocalizedName("openlight");
 		setHardness(.5f);
 	}
@@ -59,11 +59,11 @@ public class LightBlock extends Block implements ITileEntityProvider {
 		return true;
 	}
 	
-    @SideOnly(Side.CLIENT)
-    public void initModel() {
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "inventory"));
-    }
-	
+	@SideOnly(Side.CLIENT)
+	public void initModel() {
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "inventory"));
+	}
+
 	public static final PropertyInteger BRIGHTNESS = PropertyInteger.create("brightness", 0, 15);
 
 	@Override
@@ -82,39 +82,29 @@ public class LightBlock extends Block implements ITileEntityProvider {
 	{
 		return new BlockState(this, new IProperty[] {BRIGHTNESS});
 	}
-	
-	
+
+
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
 		return this.getDefaultState().withProperty(BRIGHTNESS, meta);
 	}
-	
-    @SideOnly(Side.CLIENT)
-    public EnumWorldBlockLayer getBlockLayer()
-    {
-        return EnumWorldBlockLayer.CUTOUT;
-    }
 
-    @SideOnly(Side.CLIENT)
-    public int getBlockColor()
-    {
-        return ColorizerGrass.getGrassColor(0.5D, 1.0D);
-    }
+	@Override
+	@SideOnly(Side.CLIENT)
+	public EnumWorldBlockLayer getBlockLayer()
+	{
+		return EnumWorldBlockLayer.CUTOUT;
+	}
 
-    @SideOnly(Side.CLIENT)
-    public int getRenderColor(IBlockState state)
-    {
-        return this.getBlockColor();
-    }
-    
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
 		return state.getValue(BRIGHTNESS);
 	}
-	
+
 	@Override
+	@SideOnly(Side.CLIENT)
 	public int colorMultiplier(IBlockAccess world, BlockPos pos, int renderPass) {
 		TileEntity tileEntity = world.getTileEntity(pos);
 		int color = 0xFFFFFF;
@@ -134,7 +124,7 @@ public class LightBlock extends Block implements ITileEntityProvider {
 			return state;
 		}
 	}
-	
+
 	@Override
 	public int damageDropped (IBlockState state) {
 		return 0;
@@ -149,7 +139,7 @@ public class LightBlock extends Block implements ITileEntityProvider {
 	public boolean canRenderInLayer(EnumWorldBlockLayer layer) {
 		return layer == EnumWorldBlockLayer.CUTOUT_MIPPED || super.canRenderInLayer(layer);
 	}
-	
+
 	@Override
 	public int getLightValue(IBlockAccess world, BlockPos pos)
 	{
@@ -162,4 +152,10 @@ public class LightBlock extends Block implements ITileEntityProvider {
 		// TODO Auto-generated method stub
 		return new OpenLightTE();
 	}	
+	
+    //public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ){
+    //	playerIn.addChatMessage(new ChatComponentTranslation("Brightness " + worldIn.getBlockState(pos).getValue(BRIGHTNESS)));
+	//	return true;
+    //}
+	
 }

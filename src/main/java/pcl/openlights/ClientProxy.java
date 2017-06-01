@@ -8,19 +8,21 @@ import pcl.openlights.CommonProxy;
 
 public class ClientProxy extends CommonProxy {
 	
+	@Override
 	public void registerRenderers()
 	{
-		registerBlockItem(OpenLights.openLightBlock, 0, "openLightBlock");
-		registerItem(OpenLights.prismaticPaste, "prismaticPaste");
+		registerBlockItem(OpenLights.openLightBlock, 0);
+		registerItem(OpenLights.prismaticPaste);
 	}
 	
-	public static void registerBlockItem(final Block block, int meta, final String blockName) {
-		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), meta, new ModelResourceLocation(OpenLights.MODID + ":" + blockName, "inventory"));
-		System.out.println("Registering " + blockName + " Item Renderer");
+	public static void registerBlockItem(final Block block, int meta) {
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), meta, new ModelResourceLocation(block.getRegistryName(), "inventory"));
+		System.out.println("Registering " + block.getRegistryName() + " Item Renderer");
     }
 	
-	public static void registerItem(final Item item, final String itemName)  {
-		ModelLoader.setCustomModelResourceLocation(item,  0, new ModelResourceLocation(OpenLights.MODID + ":" + itemName, "inventory"));
-		System.out.println("Registering " + itemName + " Item Renderer");
+	public static void registerItem(final Item item)  {
+		System.out.println(item.getRegistryName());
+		ModelLoader.setCustomModelResourceLocation(item,  0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
+		System.out.println("Registering " + item.getRegistryName() + " Item Renderer");
     }	
 }

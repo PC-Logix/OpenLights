@@ -4,13 +4,18 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.SimpleComponent;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.EnumSkyBlock;
+import net.minecraft.world.World;
+import pcl.openlights.blocks.LightBlock;
 
 /**
  * @author Caitlyn
@@ -65,8 +70,10 @@ public class OpenLightTE extends TileEntity implements SimpleComponent {
 		if (brightness > 15) {
 			return new Object[] { "Error, brightness should be between 0, and 15" };
 		}
+		IBlockState state = worldObj.getBlockState(pos);
+		worldObj.setBlockState(pos, state.withProperty(LightBlock.BRIGHTNESS, brightness));
 		worldObj.markBlockForUpdate(pos);
-		this.worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
+		worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
 		getDescriptionPacket();
 		return new Object[] { "Ok" };
 	}
@@ -106,5 +113,11 @@ public class OpenLightTE extends TileEntity implements SimpleComponent {
 		this.readFromNBT(tagCom);
 		this.worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
 		this.worldObj.markBlockForUpdate(getPos());
+	}
+	
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState)
+	{
+		return (oldState.getBlock() != newState.getBlock());
 	}
 }

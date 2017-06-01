@@ -9,10 +9,12 @@ import pcl.openlights.items.PrismaticPaste;
 import pcl.openlights.tileentity.OpenLightTE;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -25,6 +27,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.LanguageRegistry;
+import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * @author Caitlyn
@@ -47,16 +50,18 @@ public class OpenLights {
 
 	public static Block openLightBlock = new LightBlock();
 
-	public static Item  prismaticPaste;
+	public static Item  prismaticPaste = new PrismaticPaste();
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		cfg = new Config(new Configuration(event.getSuggestedConfigurationFile()));
 		GameRegistry.registerBlock(openLightBlock,"openlight");
+		openLightBlock.setCreativeTab(li.cil.oc.api.CreativeTab.instance);
 		GameRegistry.registerTileEntity(OpenLightTE.class, "OpenLightTE");
-
+		
 		prismaticPaste = new PrismaticPaste();
 		GameRegistry.registerItem(prismaticPaste, "prismaticPaste");
+		proxy.registerRenderers();
 	}
 
 	@EventHandler
@@ -70,7 +75,7 @@ public class OpenLights {
 		ItemStack glassPane     = new ItemStack(Blocks.glass_pane);
 
 		GameRegistry.addShapelessRecipe( new ItemStack(prismaticPaste, 4), redDye, greenDye, blueDye, glowDust);
-
+		
 		GameRegistry.addRecipe( new ItemStack(openLightBlock, 1),
 				" G ",
 				"GPG",

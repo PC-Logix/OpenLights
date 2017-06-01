@@ -4,7 +4,7 @@
 		"textures": {
 			"all": "openlights:blocks/openlight"
 		},
-		"model": "minecraft:cube_all"
+		"model": "openlights:openlight"
 	},
 	"variants": {
 		"normal": [{}],
@@ -12,22 +12,22 @@
 			"transform": "forge:default-block"
 		}],
 		"brightness": {
-			"1": {"model": "minecraft:cube_all"},
-			"2": {"model": "minecraft:cube_all"},
-			"3": {"model": "minecraft:cube_all"},
-			"4": {"model": "minecraft:cube_all"},
-			"5": {"model": "minecraft:cube_all"},
-			"6": {"model": "minecraft:cube_all"},
-			"7": {"model": "minecraft:cube_all"},
-			"8": {"model": "minecraft:cube_all"},
-			"9": {"model": "minecraft:cube_all"},
-			"10": {"model": "minecraft:cube_all"},
-			"11": {"model": "minecraft:cube_all"},
-			"12": {"model": "minecraft:cube_all"},
-			"13": {"model": "minecraft:cube_all"},
-			"14": {"model": "minecraft:cube_all"},
-			"15": {"model": "minecraft:cube_all"},
-			"0": {"model": "minecraft:cube_all"}
+			"0":  {"model": "openlights:openlight", "tintindex": 1 },
+			"1":  {"model": "openlights:openlight", "tintindex": 1 },
+			"2":  {"model": "openlights:openlight", "tintindex": 1 },
+			"3":  {"model": "openlights:openlight", "tintindex": 1 },
+			"4":  {"model": "openlights:openlight", "tintindex": 1 },
+			"5":  {"model": "openlights:openlight", "tintindex": 1 },
+			"6":  {"model": "openlights:openlight", "tintindex": 1 },
+			"7":  {"model": "openlights:openlight", "tintindex": 1 },
+			"8":  {"model": "openlights:openlight", "tintindex": 1 },
+			"9":  {"model": "openlights:openlight", "tintindex": 1 },
+			"10": {"model": "openlights:openlight", "tintindex": 1 },
+			"11": {"model": "openlights:openlight", "tintindex": 1 },
+			"12": {"model": "openlights:openlight", "tintindex": 1 },
+			"13": {"model": "openlights:openlight", "tintindex": 1 },
+			"14": {"model": "openlights:openlight", "tintindex": 1 },
+			"15": {"model": "openlights:openlight", "tintindex": 1 }
 		}
 	}
 }
