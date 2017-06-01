@@ -3,42 +3,32 @@
  */
 package pcl.openlights.blocks;
 
-import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Random;
-
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.common.registry.LanguageRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pcl.openlights.OpenLights;
 import pcl.openlights.tileentity.OpenLightTE;
+
+import javax.annotation.Nullable;
+
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumWorldBlockLayer;
-import net.minecraft.util.MathHelper;
-import net.minecraft.world.ColorizerGrass;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -49,7 +39,7 @@ import net.minecraft.world.World;
 public class LightBlock extends Block implements ITileEntityProvider {
 
 	public LightBlock() {
-		super(Material.glass);
+		super(Material.GLASS);
 		setUnlocalizedName("openlight");
 		setHardness(.5f);
 	}
@@ -78,9 +68,9 @@ public class LightBlock extends Block implements ITileEntityProvider {
 	}
 
 	@Override
-	protected BlockState createBlockState()
+	protected BlockStateContainer createBlockState()
 	{
-		return new BlockState(this, new IProperty[] {BRIGHTNESS});
+		return new BlockStateContainer(this, new IProperty[] {BRIGHTNESS});
 	}
 
 
@@ -92,27 +82,15 @@ public class LightBlock extends Block implements ITileEntityProvider {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public EnumWorldBlockLayer getBlockLayer()
+	public BlockRenderLayer getBlockLayer()
 	{
-		return EnumWorldBlockLayer.CUTOUT;
+		return BlockRenderLayer.CUTOUT;
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
 		return state.getValue(BRIGHTNESS);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public int colorMultiplier(IBlockAccess world, BlockPos pos, int renderPass) {
-		TileEntity tileEntity = world.getTileEntity(pos);
-		int color = 0xFFFFFF;
-		if (tileEntity instanceof OpenLightTE) {
-			OpenLightTE myTE = (OpenLightTE) tileEntity;
-			color = Integer.parseInt(myTE.getColor(), 16);
-		}
-		return color;
 	}
 
 	@Override
@@ -130,21 +108,24 @@ public class LightBlock extends Block implements ITileEntityProvider {
 		return 0;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
-	public int getLightOpacity() {
-		return super.getLightOpacity();
+	public int getLightOpacity(IBlockState state) {
+		return super.getLightOpacity(state);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
-	public boolean canRenderInLayer(EnumWorldBlockLayer layer) {
-		return layer == EnumWorldBlockLayer.CUTOUT_MIPPED || super.canRenderInLayer(layer);
+	public boolean canRenderInLayer(BlockRenderLayer layer) {
+		return layer == BlockRenderLayer.CUTOUT_MIPPED || super.canRenderInLayer(layer);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
-	public int getLightValue(IBlockAccess world, BlockPos pos)
+	public int getLightValue(IBlockState state)
 	{
-		super.getLightValue(world, pos);		
-		return this.lightValue = world.getBlockState(pos).getValue(BRIGHTNESS);
+		super.getLightValue(state);		
+		return this.lightValue = state.getValue(BRIGHTNESS);
 	}
 
 	@Override
@@ -153,9 +134,11 @@ public class LightBlock extends Block implements ITileEntityProvider {
 		return new OpenLightTE();
 	}	
 	
-    //public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ){
-    //	playerIn.addChatMessage(new ChatComponentTranslation("Brightness " + worldIn.getBlockState(pos).getValue(BRIGHTNESS)));
-	//	return true;
-    //}
+	@Override
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+		OpenLightTE te = (OpenLightTE) worldIn.getTileEntity(pos);
+    	playerIn.addChatMessage(new TextComponentString("Color " + te.getColor()));
+		return true;
+    }
 	
 }

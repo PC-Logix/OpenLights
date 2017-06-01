@@ -1,19 +1,17 @@
 package pcl.openlights.tileentity;
 
+import javax.annotation.Nullable;
+
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.SimpleComponent;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
-import net.minecraft.world.EnumSkyBlock;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import pcl.openlights.blocks.LightBlock;
 
@@ -41,12 +39,14 @@ public class OpenLightTE extends TileEntity implements SimpleComponent {
 		brightness = nbt.getInteger("brightness");
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
-	public void writeToNBT(NBTTagCompound nbt)
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
 		nbt.setInteger("color", Integer.parseInt(getColor(), 16));
-		nbt.setInteger("brightness", getBrightness().getBlock().getDamageValue(worldObj, pos));
+		nbt.setInteger("brightness", getBrightness().getLightValue());
+		return nbt;
 	}
 
 	@Callback
@@ -56,25 +56,29 @@ public class OpenLightTE extends TileEntity implements SimpleComponent {
 
 	@Callback(direct=true)
 	public Object[] setColor(Context context, Arguments args) {
-		color = args.checkInteger(0);
-		worldObj.markBlockForUpdate(pos);
-		this.worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
-		getDescriptionPacket();
-		return new Object[] { "Ok" };
+		//if (args.checkInteger(0) > 0xFFFFFF || args.checkInteger(0) < 0x000000) {
+			color = args.checkInteger(0);
+			this.worldObj.notifyBlockUpdate(this.pos, this.worldObj.getBlockState(this.pos), this.worldObj.getBlockState(this.pos), 2);
+			getUpdateTag();
+			markDirty();
+			return new Object[] { "Ok" };
+		//} else {
+		//	return new Object[] { "Valid range is 0x000000 to 0xFFFFFF" };
+		//}
 	}
 
 	@Callback(direct=true)
 	public Object[] setBrightness(Context context, Arguments args) {
 		//context.pause(1);
 		brightness = args.checkInteger(0);
-		if (brightness > 15) {
+		if (brightness > 15 || brightness < 0) {
 			return new Object[] { "Error, brightness should be between 0, and 15" };
 		}
 		IBlockState state = worldObj.getBlockState(pos);
 		worldObj.setBlockState(pos, state.withProperty(LightBlock.BRIGHTNESS, brightness));
-		worldObj.markBlockForUpdate(pos);
+		this.worldObj.notifyBlockUpdate(this.pos, this.worldObj.getBlockState(this.pos), this.worldObj.getBlockState(this.pos), 2);
+		getUpdateTag();
 		worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
-		getDescriptionPacket();
 		return new Object[] { "Ok" };
 	}
 
@@ -101,20 +105,28 @@ public class OpenLightTE extends TileEntity implements SimpleComponent {
 	}
 
 	@Override
-	public net.minecraft.network.Packet getDescriptionPacket() {
-		NBTTagCompound tag = new NBTTagCompound();
-		this.writeToNBT(tag);
-		return new S35PacketUpdateTileEntity(pos, 1, tag);
+	@Nullable
+	public SPacketUpdateTileEntity getUpdatePacket() {
+		return new SPacketUpdateTileEntity(getPos(), 0, getUpdateTag());
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-		NBTTagCompound tagCom = pkt.getNbtCompound();
-		this.readFromNBT(tagCom);
-		this.worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
-		this.worldObj.markBlockForUpdate(getPos());
+	public NBTTagCompound getUpdateTag() {
+		NBTTagCompound tagCom = new NBTTagCompound();
+		this.writeToNBT(tagCom);
+		return tagCom;
 	}
-	
+
+	@Override
+	public void handleUpdateTag(NBTTagCompound tag) {
+		this.readFromNBT(tag);
+	}
+
+	@Override
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
+		readFromNBT(packet.getNbtCompound());
+	}
+
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState)
 	{

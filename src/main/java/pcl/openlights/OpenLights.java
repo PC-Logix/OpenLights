@@ -1,33 +1,21 @@
 package pcl.openlights;
 
-import java.net.URL;
-import java.util.logging.Logger;
-
 import net.minecraft.init.Blocks;
 import pcl.openlights.blocks.LightBlock;
 import pcl.openlights.items.PrismaticPaste;
 import pcl.openlights.tileentity.OpenLightTE;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
-import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.common.registry.LanguageRegistry;
-import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * @author Caitlyn
@@ -67,12 +55,13 @@ public class OpenLights {
 	@EventHandler
 	public void load(FMLInitializationEvent event)
 	{
-		ItemStack redDye	    = new ItemStack(Items.dye, 1, 1);
-		ItemStack greenDye	    = new ItemStack(Items.dye, 1, 2);
-		ItemStack blueDye	    = new ItemStack(Items.dye, 1, 4);
-		ItemStack glowDust      = new ItemStack(Items.glowstone_dust);
+		proxy.registerColorHandler();
+		ItemStack redDye	    = new ItemStack(Items.DYE, 1, 1);
+		ItemStack greenDye	    = new ItemStack(Items.DYE, 1, 2);
+		ItemStack blueDye	    = new ItemStack(Items.DYE, 1, 4);
+		ItemStack glowDust      = new ItemStack(Items.GLOWSTONE_DUST);
 		ItemStack pcb		    = li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1);
-		ItemStack glassPane     = new ItemStack(Blocks.glass_pane);
+		ItemStack glassPane     = new ItemStack(Blocks.GLASS_PANE);
 
 		GameRegistry.addShapelessRecipe( new ItemStack(prismaticPaste, 4), redDye, greenDye, blueDye, glowDust);
 		

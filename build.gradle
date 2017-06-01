@@ -8,7 +8,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
     }
 }
 
@@ -24,10 +24,6 @@ repositories {
     }
 }
 
-dependencies {
-    deobfCompile "li.cil.oc:OpenComputers:MC1.8.9-1.6.+"
-}
-
 if (System.getenv().BUILD_NUMBER != null)
 	ext.buildNumber = System.getenv().BUILD_NUMBER?.toInteger()
 else
@@ -35,14 +31,18 @@ else
 
 version = "0.1.0"
 group = "pcl.openlights"
-archivesBaseName = "OpenLights-MC1.8.9"
+archivesBaseName = "OpenLights-MC1.9.4"
+
+dependencies {
+    deobfCompile "li.cil.oc:OpenComputers:MC1.9.4-1.6.+"
+}
 
 minecraft {
-	version = "1.8.9-11.15.1.1722"
+    version = "1.9.4-12.17.0.1976"
+    runDir = "run"
+    mappings = "snapshot_20160518"
 	replace "@VERSION@", project.version
 	replace "@BUILD@", project.ext.buildNumber
-	runDir = "run"
-	mappings = "stable_22"
 }
 
 version = "${version}.${project.ext.buildNumber}"
