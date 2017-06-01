@@ -35,7 +35,7 @@ else
 
 version = "0.1.0"
 group = "pcl.openlights"
-archivesBaseName = "OpenLights"
+archivesBaseName = "OpenLights-MC1.8.9"
 
 minecraft {
 	version = "1.8.9-11.15.1.1722"
