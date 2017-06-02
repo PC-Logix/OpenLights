@@ -8,12 +8,15 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pcl.openlights.tileentity.OpenLightTE;
 
+import java.util.Random;
+
 import javax.annotation.Nullable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -41,14 +44,14 @@ public class LightBlock extends Block implements ITileEntityProvider {
 	public LightBlock() {
 		super(Material.GLASS);
 		setUnlocalizedName("openlight");
-		setHardness(.5f);
+		this.setHardness(.5F);
 	}
 
 	@Override
 	public boolean hasTileEntity(IBlockState state) {
 		return true;
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	public void initModel() {
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "inventory"));
@@ -133,12 +136,12 @@ public class LightBlock extends Block implements ITileEntityProvider {
 		// TODO Auto-generated method stub
 		return new OpenLightTE();
 	}	
-	
+
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
 		OpenLightTE te = (OpenLightTE) worldIn.getTileEntity(pos);
-    	playerIn.addChatMessage(new TextComponentString("Color " + te.getColor()));
+		playerIn.addChatMessage(new TextComponentString("Color " + te.getColor()));
 		return true;
-    }
-	
+	}
+
 }

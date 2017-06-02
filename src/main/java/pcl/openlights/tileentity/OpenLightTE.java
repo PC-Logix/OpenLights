@@ -6,6 +6,8 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.SimpleComponent;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -58,8 +60,9 @@ public class OpenLightTE extends TileEntity implements SimpleComponent {
 	public Object[] setColor(Context context, Arguments args) {
 		//if (args.checkInteger(0) > 0xFFFFFF || args.checkInteger(0) < 0x000000) {
 			color = args.checkInteger(0);
-			this.worldObj.notifyBlockUpdate(this.pos, this.worldObj.getBlockState(this.pos), this.worldObj.getBlockState(this.pos), 2);
 			getUpdateTag();
+			worldObj.notifyBlockUpdate(this.pos, this.worldObj.getBlockState(this.pos), this.worldObj.getBlockState(this.pos), 2);
+			worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
 			markDirty();
 			return new Object[] { "Ok" };
 		//} else {
@@ -76,7 +79,7 @@ public class OpenLightTE extends TileEntity implements SimpleComponent {
 		}
 		IBlockState state = worldObj.getBlockState(pos);
 		worldObj.setBlockState(pos, state.withProperty(LightBlock.BRIGHTNESS, brightness));
-		this.worldObj.notifyBlockUpdate(this.pos, this.worldObj.getBlockState(this.pos), this.worldObj.getBlockState(this.pos), 2);
+		worldObj.notifyBlockUpdate(this.pos, this.worldObj.getBlockState(this.pos), this.worldObj.getBlockState(this.pos), 2);
 		getUpdateTag();
 		worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
 		return new Object[] { "Ok" };
@@ -112,7 +115,7 @@ public class OpenLightTE extends TileEntity implements SimpleComponent {
 
 	@Override
 	public NBTTagCompound getUpdateTag() {
-		NBTTagCompound tagCom = new NBTTagCompound();
+		NBTTagCompound tagCom = super.getUpdateTag();
 		this.writeToNBT(tagCom);
 		return tagCom;
 	}
@@ -124,7 +127,14 @@ public class OpenLightTE extends TileEntity implements SimpleComponent {
 
 	@Override
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
-		readFromNBT(packet.getNbtCompound());
+			readFromNBT(packet.getNbtCompound());
+			IBlockState state = this.worldObj.getBlockState(this.pos);
+			this.worldObj.notifyBlockUpdate(pos, state, state, 3);
+	}
+	
+	public boolean writeNBTToDescriptionPacket()
+	{
+		return true;
 	}
 
 	@Override
