@@ -13,6 +13,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pcl.openlights.CommonProxy;
+import pcl.openlights.blocks.LightBlock;
 import pcl.openlights.tileentity.OpenLightTE;
 
 public class ClientProxy extends CommonProxy {
@@ -45,9 +46,13 @@ public class ClientProxy extends CommonProxy {
 	private static class BlockColorHandler implements IBlockColor {
 		@Override
 		public int colorMultiplier(IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex) {
-			OpenLightTE te = (OpenLightTE) worldIn.getTileEntity(pos);
-			int color = Integer.parseInt(te.getColor(), 16);
-			return color;
+			if (pos != null && state != null && state.getBlock() instanceof LightBlock) {
+				OpenLightTE te = (OpenLightTE) worldIn.getTileEntity(pos);
+				int color = Integer.parseInt(te.getColor(), 16);
+				return color;
+			}
+			else
+				return 0;
 		}
 
 	}
