@@ -7,6 +7,7 @@ import pcl.openlights.tileentity.OpenLightTE;
 import net.minecraft.block.Block;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.tileentity.TileEntity;
@@ -45,8 +46,8 @@ public class OpenLights {
 	private static boolean debug = true;
 
 	public static Block openLightBlock = new LightBlock();
-
 	public static Item  prismaticPaste = new PrismaticPaste();
+    public static Item  openLightItem = new ItemBlock(openLightBlock).setRegistryName(openLightBlock.getRegistryName().toString());
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -56,11 +57,11 @@ public class OpenLights {
 	}
 	
 	//This should really go in another class but meh.
-	@SuppressWarnings("ConstantConditions")
 	@SubscribeEvent
 	public static void registerItems(RegistryEvent.Register<Item> event) {
 		event.getRegistry().registerAll(
-				prismaticPaste
+				prismaticPaste,
+				openLightItem
 				);
 	}
 
