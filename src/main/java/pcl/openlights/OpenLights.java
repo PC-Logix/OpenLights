@@ -44,9 +44,9 @@ public class OpenLights {
 
 	private static boolean debug = true;
 
-	public static Block openLightBlock = new LightBlock().setRegistryName("openlight");
+	public static Block openLightBlock = new LightBlock();
 
-	public static Item  prismaticPaste = new PrismaticPaste().setRegistryName("prismaticpaste");
+	public static Item  prismaticPaste = new PrismaticPaste();
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -54,7 +54,8 @@ public class OpenLights {
 		cfg = new Config(new Configuration(event.getSuggestedConfigurationFile()));
 		proxy.registerRenderers();
 	}
-
+	
+	//This should really go in another class but meh.
 	@SuppressWarnings("ConstantConditions")
 	@SubscribeEvent
 	public static void registerItems(RegistryEvent.Register<Item> event) {

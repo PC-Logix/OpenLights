@@ -44,6 +44,7 @@ public class LightBlock extends Block implements ITileEntityProvider {
 	public LightBlock() {
 		super(Material.GLASS);
 		setUnlocalizedName("openlight");
+		setRegistryName("openlight");
 		this.setHardness(.5F);
 		setCreativeTab(li.cil.oc.api.CreativeTab.instance);
 	}
