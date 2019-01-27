@@ -45,6 +45,7 @@ public class LightBlock extends Block implements ITileEntityProvider {
 		super(Material.GLASS);
 		setUnlocalizedName("openlight");
 		this.setHardness(.5F);
+		setCreativeTab(li.cil.oc.api.CreativeTab.instance);
 	}
 
 	@Override
@@ -119,8 +120,8 @@ public class LightBlock extends Block implements ITileEntityProvider {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public boolean canRenderInLayer(BlockRenderLayer layer) {
-		return layer == BlockRenderLayer.CUTOUT_MIPPED || super.canRenderInLayer(layer);
+	public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer) {
+		return layer == BlockRenderLayer.CUTOUT_MIPPED || super.canRenderInLayer(state, layer);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -135,13 +136,6 @@ public class LightBlock extends Block implements ITileEntityProvider {
 	public TileEntity createNewTileEntity(World arg0, int arg1) {
 		// TODO Auto-generated method stub
 		return new OpenLightTE();
-	}	
-
-	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-		OpenLightTE te = (OpenLightTE) worldIn.getTileEntity(pos);
-		playerIn.addChatMessage(new TextComponentString("Color " + te.getColor()));
-		return true;
 	}
 
 }

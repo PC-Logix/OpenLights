@@ -61,8 +61,8 @@ public class OpenLightTE extends TileEntity implements SimpleComponent {
 		//if (args.checkInteger(0) > 0xFFFFFF || args.checkInteger(0) < 0x000000) {
 			color = args.checkInteger(0);
 			getUpdateTag();
-			worldObj.notifyBlockUpdate(this.pos, this.worldObj.getBlockState(this.pos), this.worldObj.getBlockState(this.pos), 2);
-			worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
+			world.notifyBlockUpdate(this.pos, this.world.getBlockState(this.pos), this.world.getBlockState(this.pos), 2);
+			world.markBlockRangeForRenderUpdate(getPos(), getPos());
 			markDirty();
 			return new Object[] { "Ok" };
 		//} else {
@@ -77,11 +77,11 @@ public class OpenLightTE extends TileEntity implements SimpleComponent {
 		if (brightness > 15 || brightness < 0) {
 			return new Object[] { "Error, brightness should be between 0, and 15" };
 		}
-		IBlockState state = worldObj.getBlockState(pos);
-		worldObj.setBlockState(pos, state.withProperty(LightBlock.BRIGHTNESS, brightness));
-		worldObj.notifyBlockUpdate(this.pos, this.worldObj.getBlockState(this.pos), this.worldObj.getBlockState(this.pos), 2);
+		IBlockState state = world.getBlockState(pos);
+		world.setBlockState(pos, state.withProperty(LightBlock.BRIGHTNESS, brightness));
+		world.notifyBlockUpdate(this.pos, this.world.getBlockState(this.pos), this.world.getBlockState(this.pos), 2);
 		getUpdateTag();
-		worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
+		world.markBlockRangeForRenderUpdate(getPos(), getPos());
 		return new Object[] { "Ok" };
 	}
 
@@ -100,7 +100,7 @@ public class OpenLightTE extends TileEntity implements SimpleComponent {
 	}
 
 	public IBlockState getBrightness() {
-		return worldObj.getBlockState(pos);
+		return world.getBlockState(pos);
 	}
 
 	public int getLampColor() {
@@ -128,8 +128,8 @@ public class OpenLightTE extends TileEntity implements SimpleComponent {
 	@Override
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
 			readFromNBT(packet.getNbtCompound());
-			IBlockState state = this.worldObj.getBlockState(this.pos);
-			this.worldObj.notifyBlockUpdate(pos, state, state, 3);
+			IBlockState state = this.world.getBlockState(this.pos);
+			this.world.notifyBlockUpdate(pos, state, state, 3);
 	}
 	
 	public boolean writeNBTToDescriptionPacket()
