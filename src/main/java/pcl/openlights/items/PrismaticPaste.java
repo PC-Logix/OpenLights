@@ -14,8 +14,8 @@ public class PrismaticPaste extends Item{
 	public PrismaticPaste() {
 		super();
 		maxStackSize = 64;
-		setUnlocalizedName("prismaticpaste");
 		setRegistryName("prismaticpaste");
+		setUnlocalizedName(getRegistryName().toString());
 		setCreativeTab(li.cil.oc.api.CreativeTab.instance);
 	}
 }

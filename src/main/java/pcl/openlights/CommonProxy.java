@@ -21,4 +21,9 @@ public class CommonProxy {
 		
 	}
 
+	public void registerModels() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
