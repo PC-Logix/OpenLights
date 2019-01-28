@@ -10,12 +10,16 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 import pcl.openlights.blocks.LightBlock;
 import pcl.openlights.items.PrismaticPaste;
 import pcl.openlights.tileentity.OpenLightTE;
 
+@Mod.EventBusSubscriber
 public class ContentRegistry {
 	
     public ContentRegistry() {
@@ -45,7 +49,7 @@ public class ContentRegistry {
 	}
 
 	@SubscribeEvent
-	public void registerRecipes(RegistryEvent.Register<IRecipe> event) {
+	public static void registerRecipes(RegistryEvent.Register<IRecipe> event) {
 		ItemStack redDye	    = new ItemStack(Items.DYE, 1, 1);
 		ItemStack greenDye	    = new ItemStack(Items.DYE, 1, 2);
 		ItemStack blueDye	    = new ItemStack(Items.DYE, 1, 4);
@@ -53,15 +57,15 @@ public class ContentRegistry {
 		ItemStack pcb		    = li.cil.oc.api.Items.get("printedcircuitboard").createItemStack(1);
 		ItemStack glassPane     = new ItemStack(Blocks.GLASS_PANE);
 
-		//event.getRegistry().register(new ShapelessOreRecipe(new ResourceLocation(OpenLights.MODID), new ItemStack(prismaticPaste, 4), new Object[]{
-		//		redDye, greenDye, blueDye, glowDust
-		//}).setRegistryName(new ResourceLocation(OpenLights.MODID)));
+		event.getRegistry().register(new ShapelessOreRecipe(new ResourceLocation(OpenLights.MODID), new ItemStack(prismaticPaste, 4), new Object[]{
+				redDye, greenDye, blueDye, glowDust
+		}).setRegistryName(new ResourceLocation(OpenLights.MODID)));
 
-		//event.getRegistry().register(new ShapedOreRecipe(openLightBlock.getRegistryName(), new ItemStack(openLightBlock, 1),
-		//		" G ",
-		//		"GPG",
-		//		" C ",
-		//		'G', glassPane, 'P', prismaticPaste, 'C', pcb).setRegistryName(OpenLights.MODID,openLightBlock.getUnlocalizedName()));		
+		event.getRegistry().register(new ShapedOreRecipe(openLightBlock.getRegistryName(), new ItemStack(openLightBlock, 1),
+				" G ",
+				"GPG",
+				" C ",
+				'G', glassPane, 'P', prismaticPaste, 'C', pcb).setRegistryName(OpenLights.MODID,openLightBlock.getUnlocalizedName()));		
 	}
 	
 	private static void registerTileEntity(Class<? extends TileEntity> tileEntityClass, String key) {
