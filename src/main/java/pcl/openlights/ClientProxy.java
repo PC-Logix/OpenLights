@@ -21,9 +21,9 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void registerRenderers()
 	{
-		registerBlockItem(OpenLights.openLightBlock, 0);
-		registerItem(OpenLights.prismaticPaste);
-		registerItem(OpenLights.openLightItem);
+		registerBlockModel(OpenLights.openLightBlock, 0);
+		registerItemModel(OpenLights.prismaticPaste);
+		registerItemModel(OpenLights.openLightItem);
 	}
 
 	@Override
@@ -32,12 +32,12 @@ public class ClientProxy extends CommonProxy {
 		mc.getBlockColors().registerBlockColorHandler(new BlockColorHandler(), OpenLights.openLightBlock);
 	}
 
-	public static void registerBlockItem(Block block, int meta) {
+	public static void registerBlockModel(Block block, int meta) {
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), meta, new ModelResourceLocation(block.getRegistryName(), "inventory"));
 		//System.out.println("Registering " + block.getRegistryName() + " Item Renderer");
 	}
 
-	public static void registerItem(Item item)  {
+	public static void registerItemModel(Item item)  {
 		ModelLoader.setCustomModelResourceLocation(item,  0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
 		//System.out.println("Registering " + item.getRegistryName() + " Item Renderer");
 	}	
