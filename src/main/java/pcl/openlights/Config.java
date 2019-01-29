@@ -1,7 +1,6 @@
 package pcl.openlights;
 
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
 
 /**
  * @author Caitlyn

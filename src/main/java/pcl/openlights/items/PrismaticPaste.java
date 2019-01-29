@@ -9,13 +9,14 @@ import net.minecraft.item.Item;
  * @author Caitlyn, Techokami
  *
  */
-public class PrismaticPaste extends Item{
+public class PrismaticPaste extends Item {
+	public final static String NAME = "prismaticpaste";
 
 	public PrismaticPaste() {
 		super();
-		maxStackSize = 64;
-		setRegistryName("prismaticpaste");
-		setUnlocalizedName(getRegistryName().toString());
+		setMaxStackSize(64);
+		setRegistryName(NAME);
+		setUnlocalizedName(NAME);
 		setCreativeTab(li.cil.oc.api.CreativeTab.instance);
 	}
 }

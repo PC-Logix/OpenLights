@@ -9,7 +9,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pcl.openlights.CommonProxy;
 import pcl.openlights.blocks.LightBlock;
 import pcl.openlights.tileentity.OpenLightTE;
 

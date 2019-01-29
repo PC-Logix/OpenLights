@@ -1,2 +1,20 @@
-package assets.openlights.recipes.items
-
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:glowstone_dust"
+    },
+    {
+      "item": "minecraft:dye", "data": 1
+    },
+    {
+      "item": "minecraft:dye", "data": 2
+    },
+    {
+      "item": "minecraft:dye", "data": 4
+    }
+  ],
+  "result": {
+    "item": "openlights:prismaticpaste", "count": 4
+  }
+}
