@@ -13,7 +13,7 @@
       "item": "openlights:prismaticpaste"
     },
     "C": {
-      "item": "opencomputers:material", "data": 4, "_comment": "OpenComputers PCB"
+      "item": "#opencomputers_pcb"
     }
   },
   "result": {
