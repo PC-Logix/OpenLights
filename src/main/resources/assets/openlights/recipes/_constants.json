@@ -1,0 +1,8 @@
+[
+  {
+    "name": "opencomputers_pcb",
+    "ingredient": {
+      "item": "opencomputers:material", "data": 4
+    }
+  }
+]

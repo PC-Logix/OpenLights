@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " G ",
+    "GPG",
+    " C "
+  ],
+  "key": {
+    "G": {
+      "item": "minecraft:glass_pane"
+    },
+    "P": {
+      "item": "openlights:prismaticpaste"
+    },
+    "C": {
+      "item": "#opencomputers_pcb"
+    }
+  },
+  "result": {
+    "item": "openlights:openlight"
+  }
+}

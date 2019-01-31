@@ -3,8 +3,6 @@
  */
 package pcl.openlights;
 
-import net.minecraft.block.Block;
-
 /**
  * @author Caitlyn
  *
