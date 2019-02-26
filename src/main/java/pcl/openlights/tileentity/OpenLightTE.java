@@ -21,10 +21,10 @@ import pcl.openlights.blocks.LightBlock;
  */
 public class OpenLightTE extends TileEntity implements SimpleComponent {
 
-	public int color = 0xFFFFFF;
-	public int brightness = 0;
+	private int color = 0xFFFFFF;
+	private int brightness = 0;
 
-	public OpenLightTE() { }
+	public OpenLightTE() {}
 
 	@Override
 	public String getComponentName() {
@@ -104,6 +104,8 @@ public class OpenLightTE extends TileEntity implements SimpleComponent {
 	public int getLampColor() {
 		return color;
 	}
+
+	public int getBrightnessVal(){ return brightness; }
 
 	@Override
 	@Nullable

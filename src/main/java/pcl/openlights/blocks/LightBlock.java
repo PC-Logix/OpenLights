@@ -37,6 +37,7 @@ public class LightBlock extends Block implements ITileEntityProvider {
 	}
 
 	@Override
+	@Deprecated
 	public IBlockState getStateFromMeta(int meta)
 	{
 		return this.getDefaultState().withProperty(BRIGHTNESS, meta);
@@ -49,6 +50,7 @@ public class LightBlock extends Block implements ITileEntityProvider {
 	}
 
 	@Override
+	@Deprecated
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
 		TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof OpenLightTE) {
@@ -59,6 +61,7 @@ public class LightBlock extends Block implements ITileEntityProvider {
 	}
 
 	@Override
+	@Deprecated
 	public int getLightValue(IBlockState state){
 		this.lightValue = state.getValue(BRIGHTNESS);
 		return this.lightValue;
