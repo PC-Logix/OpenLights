@@ -11,9 +11,6 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import pcl.openlights.tileentity.OpenLightTE;
-
-import java.util.HashSet;
 
 /**
  * @author Caitlyn
@@ -33,8 +30,6 @@ public class OpenLights {
 
 	/* note about albedo, the coremod stuff didnt work for me in dev environment so you may have to test out of dev environment */
 	public static boolean albedoSupport = false;
-
-	public static HashSet<OpenLightTE> lights = new HashSet<>();
 
 	@SidedProxy(clientSide="pcl.openlights.ClientProxy", serverSide="pcl.openlights.CommonProxy")
 	public static CommonProxy proxy;
