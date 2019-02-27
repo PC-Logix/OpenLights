@@ -6,6 +6,6 @@
 OpenComputers Addon which adds a configurable colored Lamp
 
 ### how to build
-clone the project to your local machine with `git clone https://github.com/PC-Logix/OpenSecurity.git`
+clone the project to your local machine with `git clone https://github.com/PC-Logix/OpenLights.git`
 
 setup workspace with `gradlew setupDecompWorkspace` and build with `gradlew build`
