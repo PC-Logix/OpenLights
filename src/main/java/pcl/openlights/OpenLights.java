@@ -20,7 +20,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 @Mod(
 		modid=OpenLights.MODID, name="OpenLights",
 		version=BuildInfo.versionNumber + "." + BuildInfo.buildNumber,
-		dependencies = "after:opencomputers;after:albedo@[0.1,)")
+		dependencies = "after:opencomputers;after:albedo@[0.1,);after:mirage[2.0,)")
 
 public class OpenLights {
 	public static final String MODID = "openlights";
@@ -30,6 +30,7 @@ public class OpenLights {
 
 	/* note about albedo, the coremod stuff didnt work for me in dev environment so you may have to test out of dev environment */
 	public static boolean albedoSupport = false;
+	public static boolean mirageSupport = false;
 
 	@SidedProxy(clientSide="pcl.openlights.ClientProxy", serverSide="pcl.openlights.CommonProxy")
 	public static CommonProxy proxy;
@@ -40,6 +41,7 @@ public class OpenLights {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		albedoSupport = Loader.isModLoaded("albedo");
+		mirageSupport = Loader.isModLoaded("mirage");
 		MinecraftForge.EVENT_BUS.register(ContentRegistry.class);
 		MinecraftForge.EVENT_BUS.register(OpenLights.class);
 		cfg = new Config(new Configuration(event.getSuggestedConfigurationFile()));

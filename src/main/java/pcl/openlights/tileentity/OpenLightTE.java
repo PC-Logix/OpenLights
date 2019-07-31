@@ -56,16 +56,17 @@ public class OpenLightTE extends TileEntity implements SimpleComponent {
 
 	@Callback(direct=true)
 	public Object[] setColor(Context context, Arguments args) {
-		//if (args.checkInteger(0) > 0xFFFFFF || args.checkInteger(0) < 0x000000) {
-			color = args.checkInteger(0);
+		int buf = args.checkInteger(0);
+		if( ( buf <= 0xFFFFFF ) && ( buf >= 0x000000 ) ) {
+			color = buf;
 			getUpdateTag();
 			world.notifyBlockUpdate(this.pos, this.world.getBlockState(this.pos), this.world.getBlockState(this.pos), 2);
 			world.markBlockRangeForRenderUpdate(getPos(), getPos());
 			markDirty();
 			return new Object[] { "Ok" };
-		//} else {
-		//	return new Object[] { "Valid range is 0x000000 to 0xFFFFFF" };
-		//}
+		} else {
+			return new Object[] { "Valid range is 0x000000 to 0xFFFFFF" };
+		}
 	}
 
 	@Callback(direct=true)

@@ -14,11 +14,12 @@ public class AlbedoOpenLightTE extends OpenLightTE implements ILightProvider {
         light = Light.builder().pos(getPos()).color(0xFF0000, false).radius(15).build();
     }
 
-    @SideOnly(Side.CLIENT)
     @Override
     public void readFromNBT(NBTTagCompound tag){
         super.readFromNBT(tag);
-        updateLight();
+        
+        if( world.isRemote )
+            updateLight();
     }
 
     private void updateLight(){
