@@ -39,13 +39,12 @@ public class OpenLightTE extends TileEntity implements SimpleComponent {
 		brightness = nbt.getInteger("brightness");
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
 		nbt.setInteger("color", Integer.parseInt(getColor(), 16));
-		nbt.setInteger("brightness", getBrightness().getLightValue());
+		nbt.setInteger("brightness", getBrightness());
 		return nbt;
 	}
 
@@ -57,16 +56,16 @@ public class OpenLightTE extends TileEntity implements SimpleComponent {
 	@Callback(direct=true)
 	public Object[] setColor(Context context, Arguments args) {
 		int buf = args.checkInteger(0);
-		if( ( buf <= 0xFFFFFF ) && ( buf >= 0x000000 ) ) {
-			color = buf;
-			getUpdateTag();
-			world.notifyBlockUpdate(this.pos, this.world.getBlockState(this.pos), this.world.getBlockState(this.pos), 2);
-			world.markBlockRangeForRenderUpdate(getPos(), getPos());
-			markDirty();
-			return new Object[] { "Ok" };
-		} else {
-			return new Object[] { "Valid range is 0x000000 to 0xFFFFFF" };
-		}
+		
+		if ( ( buf > 0xFFFFFF ) || ( buf < 0x000000 ) )
+			return new Object[] { "Error, valid range is 0x000000 to 0xFFFFFF" };
+		
+		color = buf;
+		getUpdateTag();
+		world.notifyBlockUpdate(this.pos, this.world.getBlockState(this.pos), this.world.getBlockState(this.pos), 2);
+		world.markBlockRangeForRenderUpdate(getPos(), getPos());
+		markDirty();
+		return new Object[] { "Ok" };
 	}
 
 	@Callback(direct=true)
@@ -98,8 +97,8 @@ public class OpenLightTE extends TileEntity implements SimpleComponent {
 		return String.format("%06X", (0xFFFFFF & this.color));
 	}
 
-	public IBlockState getBrightness() {
-		return world.getBlockState(pos);
+	public int getBrightness() {
+		return world.getBlockState(pos).getValue( LightBlock.BRIGHTNESS );
 	}
 
 	public int getLampColor() {
