@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
-import pcl.openlights.util.ConcurrentlyLoadedColoredLightsModException;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author Caitlyn
@@ -37,12 +37,9 @@ public class OpenLights {
 	private static boolean debug = true;
     
 	@EventHandler
-	public void preInit(FMLPreInitializationEvent event) throws ConcurrentlyLoadedColoredLightsModException
+	public void preInit(FMLPreInitializationEvent event)
 	{
-		// Be nice and error client if the erroneous condition of loading both Mirage and Albedo exists.
-		if( ( event.getSide() == Side.CLIENT ) && Loader.isModLoaded( "mirage" ) && Loader.isModLoaded( "albedo" ) )
-			throw new ConcurrentlyLoadedColoredLightsModException();
-		
+		proxy.preInit();
 		MinecraftForge.EVENT_BUS.register(ContentRegistry.class);
 		MinecraftForge.EVENT_BUS.register(OpenLights.class);
 		cfg = new Config(new Configuration(event.getSuggestedConfigurationFile()));

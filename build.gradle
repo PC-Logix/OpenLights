@@ -14,13 +14,8 @@ buildscript {
 
 plugins {
   id "com.matthewprenger.cursegradle" version "1.0.7"
-  id 'java'
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
-
-tasks.withType(JavaCompile) {
-    options.compilerArgs += ['-Xlint:deprecation']
-}
 
 repositories {
     maven {
