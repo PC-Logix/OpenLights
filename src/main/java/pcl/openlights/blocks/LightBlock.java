@@ -46,15 +46,14 @@ public class LightBlock extends Block implements ITileEntityProvider {
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
-		return state.getValue(BRIGHTNESS);
+		return state.getValue( BRIGHTNESS );
 	}
 
 	@Override
-	@Deprecated
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
 		TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof OpenLightTE) {
-			return state.withProperty(BRIGHTNESS, state.getLightValue());
+			return state.withProperty( BRIGHTNESS, state.getValue( BRIGHTNESS ) );
 		} else {
 			return state;
 		}

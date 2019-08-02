@@ -12,6 +12,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import pcl.openlights.util.ConcurrentlyLoadedColoredLightsModException;
 
 /**
  * @author Caitlyn
@@ -21,17 +22,13 @@ import net.minecraftforge.fml.relauncher.Side;
 @Mod(
 		modid=OpenLights.MODID, name="OpenLights",
 		version=BuildInfo.versionNumber + "." + BuildInfo.buildNumber,
-		dependencies = "after:opencomputers;after:albedocore;after:albedo@[0.1,);after:mirage@[2.0,)")
+		dependencies = "after:opencomputers;after:albedo@[0.1,);after:mirage@[2.0,)")
 
 public class OpenLights {
 	public static final String MODID = "openlights";
 
 	@Instance(value = MODID)
 	public static OpenLights instance;
-
-	/* note about albedo, the coremod stuff didnt work for me in dev environment so you may have to test out of dev environment */
-	public static boolean albedoSupport = false;
-	public static boolean mirageSupport = false;
 
 	@SidedProxy(clientSide="pcl.openlights.ClientProxy", serverSide="pcl.openlights.CommonProxy")
 	public static CommonProxy proxy;
@@ -40,40 +37,11 @@ public class OpenLights {
 	private static boolean debug = true;
     
 	@EventHandler
-	public void preInit(FMLPreInitializationEvent event) {
-		boolean mirageSupportServer;
-		
-		if( event.getSide() == Side.CLIENT )
-		{
-			if( Loader.isModLoaded( "mirage" ) && Loader.isModLoaded( "albedo" ) )
-			{
-				event.getModLog().error( "Albedo and Mirage are both loaded. These mods are mutually exclusive core mods and must not be loaded simultaneously. Undefined behaviour may occur, even when using Vanilla light sources. Please only use one of these core mods." );
-				event.getModLog().error( "Colored lighting support initialization failed due to previous errors. Falling back to Vanilla (white) lighting. This will still result in undefined behaviour." );
-			}
-			else
-			{
-				mirageSupport = Loader.isModLoaded( "mirage" );
-				albedoSupport = Loader.isModLoaded( "albedo" );
-			}
-		}
-		else
-		{
-			try
-			{
-				Class.forName( "com.elytradev.mirage.Mirage", false, this.getClass().getClassLoader() );
-				mirageSupportServer = true;
-			}
-			catch( ClassNotFoundException e )
-			{
-				mirageSupportServer = false;
-			}
-			
-			if( Loader.isModLoaded( "albedocore" ) && mirageSupportServer )
-			{
-				event.getModLog().error( "Albedo and Mirage are both loaded. These mods are mutually exclusive core mods and must not be loaded simultaneously. Undefined behaviour may occur, even when using Vanilla light sources. Please only use one of these core mods." );
-				event.getModLog().error( "Colored lighting support initialization failed due to previous errors. Falling back to Vanilla (white) lighting. This will still result in undefined behaviour." );
-			}
-		}
+	public void preInit(FMLPreInitializationEvent event) throws ConcurrentlyLoadedColoredLightsModException
+	{
+		// Be nice and error client if the erroneous condition of loading both Mirage and Albedo exists.
+		if( ( event.getSide() == Side.CLIENT ) && Loader.isModLoaded( "mirage" ) && Loader.isModLoaded( "albedo" ) )
+			throw new ConcurrentlyLoadedColoredLightsModException();
 		
 		MinecraftForge.EVENT_BUS.register(ContentRegistry.class);
 		MinecraftForge.EVENT_BUS.register(OpenLights.class);
