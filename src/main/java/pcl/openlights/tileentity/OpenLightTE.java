@@ -14,6 +14,7 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -100,9 +101,16 @@ public class OpenLightTE extends TileEntity implements SimpleComponent, ILightPr
 			throw new Exception( "Valid brightness range is 0 to 15" );
 		
 		brightness = buf;
-		
-		IBlockState state = world.getBlockState( pos );
-		world.setBlockState( pos, state.withProperty( LightBlock.BRIGHTNESS, brightness ) );
+
+		( ( WorldServer ) world ).addScheduledTask( new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				IBlockState state = world.getBlockState( pos );
+				world.setBlockState( pos, state.withProperty( LightBlock.BRIGHTNESS, brightness ) );
+			}
+		});
 		
 		getUpdateTag();
 		world.notifyBlockUpdate( pos, world.getBlockState( pos ), world.getBlockState( pos ), 2 );
