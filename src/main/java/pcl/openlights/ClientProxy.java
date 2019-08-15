@@ -14,39 +14,41 @@ import pcl.openlights.blocks.LightBlock;
 import pcl.openlights.tileentity.OpenLightTE;
 import pcl.openlights.util.ConcurrentlyLoadedColoredLightsModException;
 
-public class ClientProxy extends CommonProxy {
+public class ClientProxy extends CommonProxy
+{
 	@Override
 	public void preInit()
 	{
 		// Be nice and error client if the erroneous condition of loading both Mirage and Albedo exists.
 		if( Loader.isModLoaded( "mirage" ) && Loader.isModLoaded( "albedo" ) )
-				throw new ConcurrentlyLoadedColoredLightsModException();
-	}
-	
-	@Override
-	public void registerColorHandler() {
-		Minecraft mc = Minecraft.getMinecraft();
-		mc.getBlockColors().registerBlockColorHandler(new BlockColorHandler(), ContentRegistry.openLightBlock);
+			throw new ConcurrentlyLoadedColoredLightsModException();
 	}
 
-	@SideOnly(Side.CLIENT)
-	private static class BlockColorHandler implements IBlockColor {
+	@Override
+	public void registerColorHandler()
+	{
+		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler( new BlockColorHandler(), ContentRegistry.openLightBlock );
+	}
+
+	@SideOnly( Side.CLIENT )
+	private static class BlockColorHandler implements IBlockColor
+	{
 		@Override
-		public int colorMultiplier(IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex) {
-			if (pos != null && state != null && state.getBlock() instanceof LightBlock) {
-				OpenLightTE te = (OpenLightTE) worldIn.getTileEntity(pos);
-				int color = Integer.parseInt(te.getColor(), 16);
-				return color;
-			}
-			else
-				return 0;
+		public int colorMultiplier( IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex )
+		{
+			int RetVal = 0;
+
+			if( ( pos != null ) && ( state != null ) && ( state.getBlock() instanceof LightBlock ) && ( worldIn.getTileEntity( pos ) instanceof OpenLightTE ) )
+				RetVal = ( ( OpenLightTE ) worldIn.getTileEntity( pos ) ).getColor();
+
+			return RetVal;
 		}
 	}
-	
-	@Override
-	public void registerModels() {
-		ModelLoader.setCustomModelResourceLocation(ContentRegistry.prismaticPaste,  0, new ModelResourceLocation(ContentRegistry.prismaticPaste.getRegistryName(), "inventory"));
-		ModelLoader.setCustomModelResourceLocation(ContentRegistry.openLightItem,  0, new ModelResourceLocation(ContentRegistry.openLightItem.getRegistryName(), "inventory"));
-	}
 
+	@Override
+	public void registerModels()
+	{
+		ModelLoader.setCustomModelResourceLocation( ContentRegistry.prismaticPaste, 0, new ModelResourceLocation( ContentRegistry.prismaticPaste.getRegistryName(), "inventory" ) );
+		ModelLoader.setCustomModelResourceLocation( ContentRegistry.openLightItem, 0, new ModelResourceLocation( ContentRegistry.openLightItem.getRegistryName(), "inventory" ) );
+	}
 }
