@@ -8,7 +8,7 @@
   "url": "",
   "updateUrl": "",
   "authors": ["Michiyo"],
-  "credits": "OpenComputers/Sangar for the awesome computer mod.",
+  "credits": "OpenComputers/Sangar for the awesome computer mod, Korynkai for various bugfixes and Mirage support",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []
