@@ -12,7 +12,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
@@ -32,12 +31,11 @@ import pcl.openlights.blocks.LightBlock;
 
 // NOTE: IColoredLight is to be removed after 1.12.2. See comment in IColoredLight for more details.
 @SuppressWarnings( "deprecation" )
-public class OpenLightTE extends TileEntity implements ITickable, SimpleComponent, ILightProvider, com.elytradev.mirage.lighting.IColoredLight
+public class OpenLightTE extends TileEntity implements SimpleComponent, ILightProvider, com.elytradev.mirage.lighting.IColoredLight
 {
 
 	private int color = 0xFFFFFF;
 	private int brightness = 0;
-	private boolean updateOnTick = true;
 
 	public OpenLightTE()
 	{
@@ -75,7 +73,7 @@ public class OpenLightTE extends TileEntity implements ITickable, SimpleComponen
 
 	// TODO QMX: If QMX considers making an official fork, use ColorValue class from QMXMCStdLib to support ordinal and RGB color values.
 	// NOTE QMX: Delaying any decision on official forks because it is trivial to convert a hex string to a usable numeric value using tonumber(hexstring, 16).
-	@Callback( doc = "function(color:number):string; Set the light color as an RGB value. Returns the new color as an RGB hex string. Use `tonumber(value, 16)' to convert return value to a usable numeric value.", direct = true, limit = 32 )
+	@Callback( doc = "function(color:number):string; Set the light color as an RGB value. Returns the new color as an RGB hex string. Use `tonumber(value, 16)' to convert return value to a usable numeric value." )
 	public Object[] setColor( Context context, Arguments args ) throws Exception
 	{
 		if( args.count() != 1 )
@@ -86,12 +84,14 @@ public class OpenLightTE extends TileEntity implements ITickable, SimpleComponen
 		if( ( buf > 0xFFFFFF ) || ( buf < 0x000000 ) )
 			throw new Exception( "Valid RGB range is 0x000000 to 0xFFFFFF" );
 
-		setColor( buf );
+		color = buf;
+
+		doBlockUpdate();
 
 		return new Object[]{ getColorString() };
 	}
 
-	@Callback( doc = "function(brightness:number):number; Set the brightness of the light. Returns the new brightness.", direct = true, limit = 32 )
+	@Callback( doc = "function(brightness:number):number; Set the brightness of the light. Returns the new brightness." )
 	public Object[] setBrightness( Context context, Arguments args ) throws Exception
 	{
 		if( args.count() != 1 )
@@ -102,18 +102,23 @@ public class OpenLightTE extends TileEntity implements ITickable, SimpleComponen
 		if( ( buf > 15 ) || ( buf < 0 ) )
 			throw new Exception( "Valid brightness range is 0 to 15" );
 
-		setBrightness( buf );
+		if( world.getBlockState( getPos() ).getValue( LightBlock.BRIGHTNESS ) != buf )
+			world.setBlockState( getPos(), world.getBlockState( getPos() ).withProperty( LightBlock.BRIGHTNESS, buf ) );
+
+		doBlockUpdate();
+
+		brightness = world.getBlockState( getPos() ).getValue( LightBlock.BRIGHTNESS );
 
 		return new Object[]{ getBrightness() };
 	}
 
-	@Callback( doc = "function():string; Get the light color as an RGB hex string. Use `tonumber(value, 16)' to convert return value to a usable numeric value.", direct = true, limit = 32 )
+	@Callback( doc = "function():string; Get the light color as an RGB hex string. Use `tonumber(value, 16)' to convert return value to a usable numeric value." )
 	public Object[] getColor( Context context, Arguments args )
 	{
 		return new Object[]{ getColorString() };
 	}
 
-	@Callback( doc = "function():number; Get the brightness of the light.", direct = true, limit = 32 )
+	@Callback( doc = "function():number; Get the brightness of the light." )
 	public Object[] getBrightness( Context context, Arguments args )
 	{
 		return new Object[]{ getBrightness() };
@@ -134,44 +139,12 @@ public class OpenLightTE extends TileEntity implements ITickable, SimpleComponen
 		return brightness;
 	}
 
-	public void setBrightness( int brightness )
+	protected void doBlockUpdate()
 	{
-		this.brightness = brightness;
-		updateOnTick();
-	}
-
-	public void setColor( int color )
-	{
-		this.color = color;
-		updateOnTick();
-	}
-
-	protected void updateOnTick()
-	{
-		updateOnTick = true;
-	}
-
-	@Override
-	public void update()
-	{
-		if( updateOnTick )
-		{
-			if( !world.isRemote )
-			{
-				if( world.getBlockState( getPos() ).getBlock() instanceof LightBlock )
-				{
-					if( world.getBlockState( getPos() ).getValue( LightBlock.BRIGHTNESS ) != brightness )
-						world.setBlockState( getPos(), world.getBlockState( getPos() ).withProperty( LightBlock.BRIGHTNESS, brightness ) );
-
-					getUpdateTag();
-					world.notifyBlockUpdate( getPos(), world.getBlockState( getPos() ), world.getBlockState( getPos() ), 2 );
-					world.markBlockRangeForRenderUpdate( getPos(), getPos() );
-					markDirty();
-				}
-			}
-
-			updateOnTick = false;
-		}
+		getUpdateTag();
+		world.notifyBlockUpdate( getPos(), world.getBlockState( getPos() ), world.getBlockState( getPos() ), 2 );
+		world.markBlockRangeForRenderUpdate( getPos(), getPos() );
+		markDirty();
 	}
 
 	@Override

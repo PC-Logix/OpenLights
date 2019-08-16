@@ -55,7 +55,12 @@ public class LightBlock extends Block implements ITileEntityProvider
 	@Override
 	public IBlockState getExtendedState( IBlockState state, IBlockAccess world, BlockPos pos )
 	{
-		return state.withProperty( BRIGHTNESS, state.getValue( BRIGHTNESS ) );
+		if( world.getTileEntity( pos ) instanceof OpenLightTE )
+		{
+			return state.withProperty( BRIGHTNESS, state.getValue( BRIGHTNESS ) );
+		}
+
+		return state;
 	}
 
 	@Override
