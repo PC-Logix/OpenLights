@@ -14,7 +14,6 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -31,174 +30,179 @@ import pcl.openlights.blocks.LightBlock;
 })
 
 // NOTE: IColoredLight is to be removed after 1.12.2. See comment in IColoredLight for more details.
-@SuppressWarnings("deprecation")
-public class OpenLightTE extends TileEntity implements SimpleComponent, ILightProvider, com.elytradev.mirage.lighting.IColoredLight {
+@SuppressWarnings( "deprecation" )
+public class OpenLightTE extends TileEntity implements SimpleComponent, ILightProvider, com.elytradev.mirage.lighting.IColoredLight
+{
 
 	private int color = 0xFFFFFF;
 	private int brightness = 0;
 
-	public OpenLightTE() {}
+	public OpenLightTE()
+	{
+		// Do nothing.
+	}
 
 	@Override
-	public String getComponentName() {
+	public String getComponentName()
+	{
 		return "openlight";
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt)
+	public void readFromNBT( NBTTagCompound nbt )
 	{
-		super.readFromNBT(nbt);
-		color = nbt.getInteger("color");
-		brightness = nbt.getInteger("brightness");
+		super.readFromNBT( nbt );
+		color = nbt.getInteger( "color" );
+		brightness = nbt.getInteger( "brightness" );
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
+	public NBTTagCompound writeToNBT( NBTTagCompound nbt )
 	{
-		super.writeToNBT(nbt);
-		nbt.setInteger("color", Integer.parseInt(getColor(), 16));
-		nbt.setInteger("brightness", getBrightness());
+		super.writeToNBT( nbt );
+		nbt.setInteger( "color", getColor() );
+		nbt.setInteger( "brightness", getBrightness() );
 		return nbt;
 	}
 
 	@Callback
-	public Object[] greet(Context context, Arguments args) {
-		return new Object[] { "Lasciate ogne speranza, voi ch'entrate" };
+	public Object[] greet( Context context, Arguments args )
+	{
+		return new Object[]{ "Lasciate ogne speranza, voi ch'entrate" };
 	}
 
 	// TODO QMX: If QMX considers making an official fork, use ColorValue class from QMXMCStdLib to support ordinal and RGB color values.
 	// NOTE QMX: Delaying any decision on official forks because it is trivial to convert a hex string to a usable numeric value using tonumber(hexstring, 16).
-	@Callback( doc = "function(color:number):string; Set the light color as an RGB value. Returns the new color as an RGB hex string. Use `tonumber(value, 16)' to convert return value to a usable numeric value.", direct = true, limit = 32 )
+	@Callback( doc = "function(color:number):string; Set the light color as an RGB value. Returns the new color as an RGB hex string. Use `tonumber(value, 16)' to convert return value to a usable numeric value." )
 	public Object[] setColor( Context context, Arguments args ) throws Exception
 	{
 		if( args.count() != 1 )
 			throw new Exception( "Invalid number of arguments, expected 1" );
-		
+
 		int buf = args.checkInteger( 0 );
-		
-		if ( ( buf > 0xFFFFFF ) || ( buf < 0x000000 ) )
+
+		if( ( buf > 0xFFFFFF ) || ( buf < 0x000000 ) )
 			throw new Exception( "Valid RGB range is 0x000000 to 0xFFFFFF" );
-		
+
 		color = buf;
-		
-		getUpdateTag();
-		world.notifyBlockUpdate( pos, world.getBlockState( pos ), world.getBlockState( pos ), 2 );
-		world.markBlockRangeForRenderUpdate( pos, pos );
-		markDirty();
-		
-		return new Object[] { getColor() };
+
+		doBlockUpdate();
+
+		return new Object[]{ getColorString() };
 	}
 
-	@Callback( doc = "function(brightness:number):number; Set the brightness of the light. Returns the new brightness.", direct = true, limit = 32 )
+	@Callback( doc = "function(brightness:number):number; Set the brightness of the light. Returns the new brightness." )
 	public Object[] setBrightness( Context context, Arguments args ) throws Exception
 	{
 		if( args.count() != 1 )
 			throw new Exception( "Invalid number of arguments, expected 1" );
-	
+
 		int buf = args.checkInteger( 0 );
-		
-		if ( ( buf > 15 ) || ( buf < 0 ) )
+
+		if( ( buf > 15 ) || ( buf < 0 ) )
 			throw new Exception( "Valid brightness range is 0 to 15" );
-		
-		brightness = buf;
 
-		( ( WorldServer ) world ).addScheduledTask( new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				IBlockState state = world.getBlockState( pos );
-				world.setBlockState( pos, state.withProperty( LightBlock.BRIGHTNESS, brightness ) );
-			}
-		});
-		
-		getUpdateTag();
-		world.notifyBlockUpdate( pos, world.getBlockState( pos ), world.getBlockState( pos ), 2 );
-		world.markBlockRangeForRenderUpdate( pos, pos );
-		markDirty();
-		
-		return new Object[] { getBrightness() };
+		if( world.getBlockState( getPos() ).getValue( LightBlock.BRIGHTNESS ) != buf )
+			world.setBlockState( getPos(), world.getBlockState( getPos() ).withProperty( LightBlock.BRIGHTNESS, buf ) );
+
+		doBlockUpdate();
+
+		brightness = world.getBlockState( getPos() ).getValue( LightBlock.BRIGHTNESS );
+
+		return new Object[]{ getBrightness() };
 	}
 
-	@Callback( doc = "function():string; Get the light color as an RGB hex string. Use `tonumber(value, 16)' to convert return value to a usable numeric value.", direct = true, limit = 32 )
-	public Object[] getColor(Context context, Arguments args) {
-		return new Object[] { getColor() };
+	@Callback( doc = "function():string; Get the light color as an RGB hex string. Use `tonumber(value, 16)' to convert return value to a usable numeric value." )
+	public Object[] getColor( Context context, Arguments args )
+	{
+		return new Object[]{ getColorString() };
 	}
 
-	@Callback( doc = "function():number; Get the brightness of the light.", direct = true, limit = 32 )
-	public Object[] getBrightness(Context context, Arguments args) {
-		return new Object[] { getBrightness() };
+	@Callback( doc = "function():number; Get the brightness of the light." )
+	public Object[] getBrightness( Context context, Arguments args )
+	{
+		return new Object[]{ getBrightness() };
 	}
 
-	public String getColor() {
-		return String.format("%06X", (0xFFFFFF & this.color));
-	}
-
-	public int getBrightness() {
-		return world.getBlockState(pos).getValue( LightBlock.BRIGHTNESS );
-	}
-
-	public int getLampColor() {
+	public int getColor()
+	{
 		return color;
 	}
-	
+
+	public String getColorString()
+	{
+		return String.format( "%06X", ( 0xFFFFFF & getColor() ) );
+	}
+
+	public int getBrightness()
+	{
+		return brightness;
+	}
+
+	protected void doBlockUpdate()
+	{
+		getUpdateTag();
+		world.notifyBlockUpdate( getPos(), world.getBlockState( getPos() ), world.getBlockState( getPos() ), 2 );
+		world.markBlockRangeForRenderUpdate( getPos(), getPos() );
+		markDirty();
+	}
+
 	@Override
 	@SideOnly( Side.CLIENT )
 	@Optional.Method( modid = "albedo" )
-    public elucent.albedo.lighting.Light provideLight()
-    {
-        return elucent.albedo.lighting.Light.builder()
-			.pos( getPos() )
-			.color( color, false )
-			.radius( brightness )
-			.build();
-    }
-    
+	public elucent.albedo.lighting.Light provideLight()
+	{
+		return elucent.albedo.lighting.Light.builder()
+				.pos( getPos() )
+				.color( getColor(), false )
+				.radius( getBrightness() )
+				.build();
+	}
+
 	@Nullable
 	@Override
 	@SideOnly( Side.CLIENT )
 	@Optional.Method( modid = "mirage" )
-	public com.elytradev.mirage.lighting.Light getColoredLight() {
+	public com.elytradev.mirage.lighting.Light getColoredLight()
+	{
 		return com.elytradev.mirage.lighting.Light.builder()
-			.pos( getPos() )
-			.color( color, false )
-			.radius( brightness )
-			.build();
+				.pos( getPos() )
+				.color( getColor(), false )
+				.radius( getBrightness() )
+				.build();
 	}
 
 	@Override
 	@Nullable
-	public SPacketUpdateTileEntity getUpdatePacket() {
-		return new SPacketUpdateTileEntity(getPos(), 0, getUpdateTag());
+	public SPacketUpdateTileEntity getUpdatePacket()
+	{
+		return new SPacketUpdateTileEntity( getPos(), 0, getUpdateTag() );
 	}
 
 	@Override
-	public NBTTagCompound getUpdateTag() {
+	public NBTTagCompound getUpdateTag()
+	{
 		NBTTagCompound tagCom = super.getUpdateTag();
-		this.writeToNBT(tagCom);
+		writeToNBT( tagCom );
 		return tagCom;
 	}
 
 	@Override
-	public void handleUpdateTag(NBTTagCompound tag) {
-		this.readFromNBT(tag);
+	public void handleUpdateTag( NBTTagCompound tag )
+	{
+		this.readFromNBT( tag );
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
-			readFromNBT(packet.getNbtCompound());
-			IBlockState state = this.world.getBlockState(this.pos);
-			this.world.notifyBlockUpdate(pos, state, state, 3);
-	}
-	
-	public boolean writeNBTToDescriptionPacket()
+	public void onDataPacket( NetworkManager net, SPacketUpdateTileEntity packet )
 	{
-		return true;
+		readFromNBT( packet.getNbtCompound() );
+		world.notifyBlockUpdate( getPos(), world.getBlockState( getPos() ), world.getBlockState( getPos() ), 3 );
 	}
 
 	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState)
+	public boolean shouldRefresh( World world, BlockPos pos, IBlockState oldState, IBlockState newState )
 	{
-		return (oldState.getBlock() != newState.getBlock());
+		return ( oldState.getBlock() != newState.getBlock() );
 	}
 }

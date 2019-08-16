@@ -17,41 +17,43 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
  */
 
 @Mod(
-		modid=OpenLights.MODID, name="OpenLights",
-		version=BuildInfo.versionNumber + "." + BuildInfo.buildNumber,
-		dependencies = "after:opencomputers;after:albedo@[0.1,);after:mirage@[2.0,)")
-
-public class OpenLights {
+		modid = OpenLights.MODID,
+		name = "OpenLights",
+		version = BuildInfo.versionNumber + "." + BuildInfo.buildNumber,
+		dependencies = "after:opencomputers;after:albedo@[0.1,);after:mirage@[2.0,)"
+)
+public class OpenLights
+{
 	public static final String MODID = "openlights";
 
-	@Instance(value = MODID)
+	@Instance( value = MODID )
 	public static OpenLights instance;
 
-	@SidedProxy(clientSide="pcl.openlights.ClientProxy", serverSide="pcl.openlights.CommonProxy")
+	@SidedProxy( clientSide = "pcl.openlights.ClientProxy", serverSide = "pcl.openlights.CommonProxy" )
 	public static CommonProxy proxy;
 	public static Config cfg = null;
 
 	private static boolean debug = true;
-    
+
 	@EventHandler
-	public void preInit(FMLPreInitializationEvent event)
+	public void preInit( FMLPreInitializationEvent event )
 	{
 		proxy.preInit();
-		MinecraftForge.EVENT_BUS.register(ContentRegistry.class);
-		MinecraftForge.EVENT_BUS.register(OpenLights.class);
-		cfg = new Config(new Configuration(event.getSuggestedConfigurationFile()));
+		MinecraftForge.EVENT_BUS.register( ContentRegistry.class );
+		MinecraftForge.EVENT_BUS.register( OpenLights.class );
+		cfg = new Config( new Configuration( event.getSuggestedConfigurationFile() ) );
 		proxy.registerRenderers();
 	}
-	
+
 	@EventHandler
-	public void load(FMLInitializationEvent event)
+	public void load( FMLInitializationEvent event )
 	{
 		proxy.registerColorHandler();
 	}
-	
-    @SubscribeEvent
-    public static void onRegisterModels(ModelRegistryEvent event) {
-        proxy.registerModels();
-    }
 
+	@SubscribeEvent
+	public static void onRegisterModels( ModelRegistryEvent event )
+	{
+		proxy.registerModels();
+	}
 }
