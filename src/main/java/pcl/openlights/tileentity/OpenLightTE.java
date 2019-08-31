@@ -2,7 +2,10 @@ package pcl.openlights.tileentity;
 
 import javax.annotation.Nullable;
 
+import com.elytradev.mirage.event.GatherLightsEvent;
+import com.elytradev.mirage.lighting.ILightEventConsumer;
 import elucent.albedo.lighting.ILightProvider;
+
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
@@ -26,12 +29,11 @@ import pcl.openlights.blocks.LightBlock;
 
 @Optional.InterfaceList({
 	@Optional.Interface( iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo" ),
-	@Optional.Interface( iface = "com.elytradev.mirage.lighting.IColoredLight", modid = "mirage" )
+	@Optional.Interface( iface = "com.elytradev.mirage.lighting.ILightEventConsumer", modid = "mirage" )
 })
 
-// NOTE: IColoredLight is to be removed after 1.12.2. See comment in IColoredLight for more details.
-@SuppressWarnings( "deprecation" )
-public class OpenLightTE extends TileEntity implements SimpleComponent, ILightProvider, com.elytradev.mirage.lighting.IColoredLight
+
+public class OpenLightTE extends TileEntity implements SimpleComponent, ILightProvider, ILightEventConsumer
 {
 
 	private int color = 0xFFFFFF;
@@ -71,8 +73,6 @@ public class OpenLightTE extends TileEntity implements SimpleComponent, ILightPr
 		return new Object[]{ "Lasciate ogne speranza, voi ch'entrate" };
 	}
 
-	// TODO QMX: If QMX considers making an official fork, use ColorValue class from QMXMCStdLib to support ordinal and RGB color values.
-	// NOTE QMX: Delaying any decision on official forks because it is trivial to convert a hex string to a usable numeric value using tonumber(hexstring, 16).
 	@Callback( doc = "function(color:number):string; Set the light color as an RGB value. Returns the new color as an RGB hex string. Use `tonumber(value, 16)' to convert return value to a usable numeric value." )
 	public Object[] setColor( Context context, Arguments args ) throws Exception
 	{
@@ -159,17 +159,17 @@ public class OpenLightTE extends TileEntity implements SimpleComponent, ILightPr
 				.build();
 	}
 
-	@Nullable
 	@Override
 	@SideOnly( Side.CLIENT )
 	@Optional.Method( modid = "mirage" )
-	public com.elytradev.mirage.lighting.Light getColoredLight()
+	public void gatherLights( GatherLightsEvent event )
 	{
-		return com.elytradev.mirage.lighting.Light.builder()
+		event.add( com.elytradev.mirage.lighting.Light.builder()
 				.pos( getPos() )
 				.color( getColor(), false )
 				.radius( getBrightness() )
-				.build();
+				.intensity( ( 0.25f / 15 ) * getBrightness() )
+				.build() );
 	}
 
 	@Override
