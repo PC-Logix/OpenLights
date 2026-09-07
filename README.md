@@ -1,11 +1,26 @@
 # OpenLights
-[![Discord](http://img.shields.io/discord/125649403162656768.svg?label=discord&style=popout)](https://discord.gg/dJq9EnP)
-[![curseForge Project](http://cf.way2muchnoise.eu/versions/openlights_latest.svg)](https://minecraft.curseforge.com/projects/openlights)
-[![Download](http://cf.way2muchnoise.eu/full_225225_downloads.svg)](https://minecraft.curseforge.com/projects/openlights/files)
 
-OpenComputers Addon which adds a configurable colored Lamp
+OpenLights is an OpenComputers: Rebooted addon that adds a programmable light block. Computers can set its RGB color and vanilla light level from 0 to 15.
 
-### how to build
-clone the project to your local machine with `git clone https://github.com/PC-Logix/OpenLights.git`
+## Requirements
 
-setup workspace with `gradlew setupDecompWorkspace` and build with `gradlew build`
+- Minecraft 1.21.1
+- NeoForge 21.1.233 or newer
+- OpenComputers: Rebooted 1.9.4 or newer
+- Java 21
+
+Veil 2.0 or newer is optional. When present, OpenLights uses Veil point lights so the programmed RGB color also illuminates the world. Without Veil, the block remains color-tinted and emits the programmed vanilla light level.
+
+## Building
+
+Run `gradlew.bat build` on Windows or `./gradlew build` on Linux and macOS. The built mod is written to `build/libs`.
+
+## Component API
+
+An OpenLight is exposed as an `openlight` component with the original API:
+
+- `greet()`
+- `setColor(color)`
+- `setBrightness(brightness)`
+- `getColor()`
+- `getBrightness()`

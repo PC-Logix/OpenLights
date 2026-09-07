@@ -1,33 +1,20 @@
 {
-	"forge_marker": 1,
-	"defaults": {
-		"textures": {
-			"all": "openlights:blocks/openlight"
-		},
-		"model": "openlights:openlight"
-	},
-	"variants": {
-		"normal": [{}],
-		"inventory": [{
-			"transform": "forge:default-block"
-		}],
-		"brightness": {
-			"0":  {"model": "openlights:openlight", "tintindex": 1 },
-			"1":  {"model": "openlights:openlight", "tintindex": 1 },
-			"2":  {"model": "openlights:openlight", "tintindex": 1 },
-			"3":  {"model": "openlights:openlight", "tintindex": 1 },
-			"4":  {"model": "openlights:openlight", "tintindex": 1 },
-			"5":  {"model": "openlights:openlight", "tintindex": 1 },
-			"6":  {"model": "openlights:openlight", "tintindex": 1 },
-			"7":  {"model": "openlights:openlight", "tintindex": 1 },
-			"8":  {"model": "openlights:openlight", "tintindex": 1 },
-			"9":  {"model": "openlights:openlight", "tintindex": 1 },
-			"10": {"model": "openlights:openlight", "tintindex": 1 },
-			"11": {"model": "openlights:openlight", "tintindex": 1 },
-			"12": {"model": "openlights:openlight", "tintindex": 1 },
-			"13": {"model": "openlights:openlight", "tintindex": 1 },
-			"14": {"model": "openlights:openlight", "tintindex": 1 },
-			"15": {"model": "openlights:openlight", "tintindex": 1 }
-		}
-	}
+  "variants": {
+    "brightness=0": { "model": "openlights:block/openlight" },
+    "brightness=1": { "model": "openlights:block/openlight" },
+    "brightness=2": { "model": "openlights:block/openlight" },
+    "brightness=3": { "model": "openlights:block/openlight" },
+    "brightness=4": { "model": "openlights:block/openlight" },
+    "brightness=5": { "model": "openlights:block/openlight" },
+    "brightness=6": { "model": "openlights:block/openlight" },
+    "brightness=7": { "model": "openlights:block/openlight" },
+    "brightness=8": { "model": "openlights:block/openlight" },
+    "brightness=9": { "model": "openlights:block/openlight" },
+    "brightness=10": { "model": "openlights:block/openlight" },
+    "brightness=11": { "model": "openlights:block/openlight" },
+    "brightness=12": { "model": "openlights:block/openlight" },
+    "brightness=13": { "model": "openlights:block/openlight" },
+    "brightness=14": { "model": "openlights:block/openlight" },
+    "brightness=15": { "model": "openlights:block/openlight" }
+  }
 }

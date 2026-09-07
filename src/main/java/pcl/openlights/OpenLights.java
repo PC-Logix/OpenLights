@@ -1,59 +1,68 @@
 package pcl.openlights;
 
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.Mod.Instance;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraft.core.Direction;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.material.MapColor;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
-/**
- * @author Caitlyn
- *
- */
+@Mod(OpenLights.MOD_ID)
+public final class OpenLights {
+    public static final String MOD_ID = "openlights";
 
-@Mod(
-		modid = OpenLights.MODID,
-		name = "OpenLights",
-		version = BuildInfo.versionNumber + "." + BuildInfo.buildNumber,
-		dependencies = "after:opencomputers;after:albedo@[0.1,);after:mirage@[2.0,)"
-)
-public class OpenLights
-{
-	public static final String MODID = "openlights";
+    public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MOD_ID);
+    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MOD_ID);
+    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
+            DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, MOD_ID);
 
-	@Instance( value = MODID )
-	public static OpenLights instance;
+    public static final DeferredHolder<Block, OpenLightBlock> OPEN_LIGHT = BLOCKS.register("openlight", () ->
+            new OpenLightBlock(Block.Properties.of()
+                    .mapColor(MapColor.COLOR_LIGHT_BLUE)
+                    .strength(0.5F)
+                    .sound(SoundType.GLASS)
+                    .lightLevel(state -> state.getValue(OpenLightBlock.BRIGHTNESS))));
 
-	@SidedProxy( clientSide = "pcl.openlights.ClientProxy", serverSide = "pcl.openlights.CommonProxy" )
-	public static CommonProxy proxy;
-	public static Config cfg = null;
+    public static final DeferredHolder<Item, Item> OPEN_LIGHT_ITEM = ITEMS.register("openlight", () ->
+            new BlockItem(OPEN_LIGHT.get(), new Item.Properties()));
 
-	private static boolean debug = true;
+    public static final DeferredHolder<Item, Item> PRISMATIC_PASTE = ITEMS.register("prismaticpaste", () ->
+            new Item(new Item.Properties()));
 
-	@EventHandler
-	public void preInit( FMLPreInitializationEvent event )
-	{
-		proxy.preInit();
-		MinecraftForge.EVENT_BUS.register( ContentRegistry.class );
-		MinecraftForge.EVENT_BUS.register( OpenLights.class );
-		cfg = new Config( new Configuration( event.getSuggestedConfigurationFile() ) );
-		proxy.registerRenderers();
-	}
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<OpenLightBlockEntity>> OPEN_LIGHT_BLOCK_ENTITY =
+            BLOCK_ENTITIES.register("openlight", () ->
+                    BlockEntityType.Builder.of(OpenLightBlockEntity::new, OPEN_LIGHT.get()).build(null));
 
-	@EventHandler
-	public void load( FMLInitializationEvent event )
-	{
-		proxy.registerColorHandler();
-	}
+    public OpenLights(IEventBus modBus) {
+        BLOCKS.register(modBus);
+        ITEMS.register(modBus);
+        BLOCK_ENTITIES.register(modBus);
+        modBus.addListener(this::registerCapabilities);
+        modBus.addListener(this::addCreativeContents);
+    }
 
-	@SubscribeEvent
-	public static void onRegisterModels( ModelRegistryEvent event )
-	{
-		proxy.registerModels();
-	}
+    @SuppressWarnings("unchecked")
+    private void registerCapabilities(RegisterCapabilitiesEvent event) {
+        BlockCapability<li.cil.oc.api.network.Environment, Direction> capability =
+                (BlockCapability<li.cil.oc.api.network.Environment, Direction>)
+                        (BlockCapability<?, ?>) li.cil.oc.common.Capabilities.EnvironmentCapability();
+        event.registerBlockEntity(capability, OPEN_LIGHT_BLOCK_ENTITY.get(), (blockEntity, side) -> blockEntity);
+    }
+
+    private void addCreativeContents(BuildCreativeModeTabContentsEvent event) {
+        if (event.getTabKey().location().equals(ResourceLocation.fromNamespaceAndPath("opencomputers", "main"))) {
+            event.accept(OPEN_LIGHT_ITEM.get());
+            event.accept(PRISMATIC_PASTE.get());
+        }
+    }
 }
