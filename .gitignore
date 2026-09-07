@@ -222,3 +222,7 @@ pip-log.txt
 /server_runtime/
 *~
 *.lnk
+
+# IntelliJ IDEA
+/.idea/
+/.idea-*-backup/
