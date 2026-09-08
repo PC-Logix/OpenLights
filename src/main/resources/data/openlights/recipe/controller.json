@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PCP",
+    "CAC",
+    "PCP"
+  ],
+  "key": {
+    "P": { "item": "openlights:prismaticpaste" },
+    "C": { "item": "opencomputers:cable" },
+    "A": { "item": "opencomputers:adapter" }
+  },
+  "result": {
+    "id": "openlights:controller",
+    "count": 1
+  }
+}

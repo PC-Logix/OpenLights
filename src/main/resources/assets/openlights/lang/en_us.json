@@ -1,4 +1,11 @@
 {
   "block.openlights.openlight": "OpenLight",
-  "item.openlights.prismaticpaste": "Prismatic Paste"
+  "block.openlights.controller": "OpenLights Controller",
+  "item.openlights.prismaticpaste": "Prismatic Paste",
+  "message.openlights.controller_selected": "Selected OpenLights Controller at %s, %s, %s. Sneak-use OpenLights to bind them.",
+  "message.openlights.controller_unavailable": "The selected OpenLights Controller is unavailable. Sneak-use a loaded controller to select it again.",
+  "message.openlights.controller_full": "That OpenLights Controller already has the maximum of %s lights.",
+  "message.openlights.light_bound": "Bound OpenLight as ID %s to the controller at %s, %s, %s.",
+  "message.openlights.light_id": "This OpenLight is ID %s on the controller at %s, %s, %s.",
+  "message.openlights.no_controller_selected": "Sneak-use an OpenLights Controller first, then sneak-use this OpenLight."
 }

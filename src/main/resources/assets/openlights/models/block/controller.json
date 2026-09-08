@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "minecraft:block/polished_deepslate",
+    "down": "minecraft:block/polished_deepslate",
+    "up": "minecraft:block/redstone_lamp_on",
+    "north": "minecraft:block/iron_block",
+    "south": "minecraft:block/iron_block",
+    "west": "minecraft:block/iron_block",
+    "east": "minecraft:block/iron_block"
+  }
+}

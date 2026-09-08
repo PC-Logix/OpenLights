@@ -24,3 +24,34 @@ An OpenLight is exposed as an `openlight` component with the original API:
 - `setBrightness(brightness)`
 - `getColor()`
 - `getBrightness()`
+
+## OpenLights Controller
+
+The controller solves the OpenComputers component limit: one controller component can manage up to 4,096 OpenLights without connecting each light to a cable network.
+
+1. Place an OpenLights Controller and connect it to the computer network with OpenComputers cable.
+2. Sneak-use the controller once. The chat message confirms the selected controller.
+3. Sneak-use each OpenLight you want to enroll. Chat reports its stable numeric ID.
+4. Keep sneak-using lights to enroll more; the selection stays active. Sneak-use a bound light without a selected controller to report its current ID.
+
+The controller appears as the `openlights_controller` component on a connected computer. Its callbacks are:
+
+- `getControllerId()` returns the controller UUID.
+- `count()` returns the number of registered lights.
+- `list()` returns ID-keyed records containing `x`, `y`, `z`, and `loaded`; loaded records also contain `color`, `colorHex`, and `brightness`.
+- `getLight(id)` returns one record.
+- `setColor(id, color)`, `setBrightness(id, brightness)`, and `setLight(id, color, brightness)` control one loaded light.
+- `setAllColor(color)`, `setAllBrightness(brightness)`, and `setAll(color, brightness)` control every loaded registered light. Each returns changed and unavailable counts.
+- `removeLight(id)` unregisters a light.
+
+Colors are numeric RGB values such as `0xFF4000`; brightness is `0` through `15`. Registered lights in unloaded chunks remain in `list()` with `loaded=false` and are not force-loaded by callbacks.
+
+Example:
+
+```lua
+local controller = component.openlights_controller
+for id, light in pairs(controller.list()) do
+  if light.loaded then controller.setColor(id, 0xFF4000) end
+end
+controller.setAllBrightness(12)
+```

@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "openlights:items/prismaticpaste"
+    "layer0": "openlights:item/prismaticpaste"
   }
 }

@@ -1,7 +1,7 @@
 {
   "textures": {
-    "all": "openlights:blocks/openlight",
-    "particle": "openlights:blocks/openlight"
+    "all": "openlights:block/openlight",
+    "particle": "openlights:block/openlight"
   },
   "elements": [
     {

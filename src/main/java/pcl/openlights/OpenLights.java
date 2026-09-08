@@ -33,8 +33,17 @@ public final class OpenLights {
                     .sound(SoundType.GLASS)
                     .lightLevel(state -> state.getValue(OpenLightBlock.BRIGHTNESS))));
 
+    public static final DeferredHolder<Block, OpenLightsControllerBlock> CONTROLLER = BLOCKS.register("controller", () ->
+            new OpenLightsControllerBlock(Block.Properties.of()
+                    .mapColor(MapColor.METAL)
+                    .strength(2.0F)
+                    .sound(SoundType.METAL)));
+
     public static final DeferredHolder<Item, Item> OPEN_LIGHT_ITEM = ITEMS.register("openlight", () ->
             new BlockItem(OPEN_LIGHT.get(), new Item.Properties()));
+
+    public static final DeferredHolder<Item, Item> CONTROLLER_ITEM = ITEMS.register("controller", () ->
+            new BlockItem(CONTROLLER.get(), new Item.Properties()));
 
     public static final DeferredHolder<Item, Item> PRISMATIC_PASTE = ITEMS.register("prismaticpaste", () ->
             new Item(new Item.Properties()));
@@ -42,6 +51,10 @@ public final class OpenLights {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<OpenLightBlockEntity>> OPEN_LIGHT_BLOCK_ENTITY =
             BLOCK_ENTITIES.register("openlight", () ->
                     BlockEntityType.Builder.of(OpenLightBlockEntity::new, OPEN_LIGHT.get()).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<OpenLightsControllerBlockEntity>>
+            OPEN_LIGHTS_CONTROLLER_BLOCK_ENTITY = BLOCK_ENTITIES.register("controller", () ->
+                    BlockEntityType.Builder.of(OpenLightsControllerBlockEntity::new, CONTROLLER.get()).build(null));
 
     public OpenLights(IEventBus modBus) {
         BLOCKS.register(modBus);
@@ -57,11 +70,13 @@ public final class OpenLights {
                 (BlockCapability<li.cil.oc.api.network.Environment, Direction>)
                         (BlockCapability<?, ?>) li.cil.oc.common.Capabilities.EnvironmentCapability();
         event.registerBlockEntity(capability, OPEN_LIGHT_BLOCK_ENTITY.get(), (blockEntity, side) -> blockEntity);
+        event.registerBlockEntity(capability, OPEN_LIGHTS_CONTROLLER_BLOCK_ENTITY.get(), (blockEntity, side) -> blockEntity);
     }
 
     private void addCreativeContents(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey().location().equals(ResourceLocation.fromNamespaceAndPath("opencomputers", "main"))) {
             event.accept(OPEN_LIGHT_ITEM.get());
+            event.accept(CONTROLLER_ITEM.get());
             event.accept(PRISMATIC_PASTE.get());
         }
     }

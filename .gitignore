@@ -224,5 +224,7 @@ pip-log.txt
 *.lnk
 
 # IntelliJ IDEA
-/.idea/
+/.idea/*
+!/.idea/runConfigurations/
+!/.idea/runConfigurations/*.xml
 /.idea-*-backup/
